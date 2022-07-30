@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,16 +32,30 @@ ALLOWED_HOSTS = [
     '*'
 ]
 
-
 # Application definition
-
 INSTALLED_APPS = [
+    #Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+        #GeoDjango
+    # 'django.contrib.gis',
+    
+    #REST Framework
+    'rest_framework',
+    # 'rest_framework.authtoken',
+        
+        #GIS REST Framework
+    # 'rest_framework_gis',
+    
+    #Apps
+    'authentication',
+    'logs',
+    'structure',
 ]
 
 MIDDLEWARE = [
@@ -79,13 +94,27 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # 'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'goaccess',
         'USER': 'goaccess',
         'PASSWORD': 'goaccess',
         'HOST': '127.0.0.1',
-        'PORT': '5432',
+        # 'PORT': '5432',
+        'PORT': '3306',
     }
+}
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
 
@@ -124,6 +153,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+
+AUTH_USER_MODEL = 'authentication.User'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
