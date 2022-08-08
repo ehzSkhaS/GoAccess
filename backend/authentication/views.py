@@ -1,10 +1,20 @@
-from django.shortcuts import render
-from rest_framework.generics import GenericAPIView
+from rest_framework import generics
 
-class RegisterAgency(GenericAPIView):
-    def post(self, request):
-        pass
+from .models import User
+from .permissions import *
+from .serializers import UserSerializer
 
-class RegisterAdmin(GenericAPIView):
-    def post(self, request):
-        pass
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    
+    
+class UserDetail(generics.RetrieveAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    # permission_classes = [IsCurrentUser]
+    
+    
+class RegisterView(generics.CreateAPIView):
+    pass
+    
