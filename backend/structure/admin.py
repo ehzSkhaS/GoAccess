@@ -9,11 +9,6 @@ from .models import(
 )
 
 
-# admin.site.register(Condo)
-# admin.site.register(ResidencialCondo)
-admin.site.register(Residence)
-
-
 @admin.register(Platform)
 class PlatformType(admin.ModelAdmin):
     list_display = (
@@ -73,13 +68,13 @@ class AgencyType(admin.ModelAdmin):
         'get_email',
         'get_is_active',
         'get_last_login',
-        'get_platform',
         'get_number',
         'get_created',
         'get_updated',
         'get_end',
         'get_quantity',
-        'get_state'
+        'get_state',
+        'get_platform'
     )
     
     @admin.display(ordering='owner__user__email', description='admin email')
@@ -155,4 +150,34 @@ class CondoType(admin.ModelAdmin):
     def get_agency(self, obj):
         return obj.agency.name
     
+
+@admin.register(
+    Residence
+)
+class ResidenceType(admin.ModelAdmin):
+    list_display = (
+        'description',
+        'number',
+        'street',
+        'get_email',
+        'get_is_active',
+        'get_last_login',
+        'get_condo'
+    )
+    
+    @admin.display(ordering='owner__user__email', description='admin email')
+    def get_email(self, obj):
+        return obj.owner.user.email
+    
+    @admin.display(ordering='owner__user__is_active', description='active', boolean=True)
+    def get_is_active(self, obj):
+        return obj.owner.user.is_active
+    
+    @admin.display(ordering='owner__user__last_login', description='last login')
+    def get_last_login(self, obj):
+        return obj.owner.user.last_login
+    
+    @admin.display(ordering='residencialcondo__name', description='condo')
+    def get_condo(self, obj):
+        return obj.condo.description
     
