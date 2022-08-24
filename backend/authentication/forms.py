@@ -11,7 +11,18 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name')
+        fields = (
+            'email',
+            'is_resident',
+            'is_security',
+            'is_supervisor',
+            'is_residenceadmin',
+            'is_condoadmin',
+            'is_agencyadmin',
+            'is_platformadmin',
+            'is_staff',
+            'is_superuser',
+        )
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
@@ -28,9 +39,10 @@ class UserCreationForm(forms.ModelForm):
         return user
 
 
-class UserChangeForm(forms.ModelForm):
-    password = ReadOnlyPasswordHashField()
+# class UserChangeForm(forms.ModelForm):
+#     password = ReadOnlyPasswordHashField()
 
-    class Meta:
-        model = User
-        fields = ('email', 'password', 'is_active', 'is_staff', 'is_superuser')
+#     class Meta:
+#         model = User
+#         fields = ('email', 'password', 'is_active', 'is_staff', 'is_superuser')
+

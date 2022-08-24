@@ -2,20 +2,41 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from .forms import UserChangeForm, UserCreationForm
-from .models import User
+from .forms import UserCreationForm
+from .models import(
+    AgencyAdmin,
+    CondoAdmin,
+    PlatformAdmin,
+    ResidenceAdmin,
+    Resident,
+    Security,
+    Supervisor,
+    User
+)
 
 
 admin.site.unregister(Group)
 
+
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    form = UserChangeForm
     add_form = UserCreationForm
-    search_fields = ('email',)
+    list_filter = ()
     ordering = ('email',)
     filter_horizontal = ('user_permissions',)
-    list_filter = ('is_superuser',)
+    
+    search_fields = (
+        'email',
+        'first_name',
+        'last_name',
+        'phone'
+    )
+    
+    readonly_fields = (
+        'uuid',
+        'last_login',
+        'created_date'
+    )
     
     list_display = (
         'email',
@@ -23,6 +44,13 @@ class UserAdmin(BaseUserAdmin):
         'last_name',
         'phone',
         'is_active',
+        'is_resident',
+        'is_security',
+        'is_supervisor',
+        'is_residenceadmin',
+        'is_condoadmin',
+        'is_agencyadmin',
+        'is_platformadmin',
         'is_staff',
         'is_superuser',
         'last_login',
@@ -47,10 +75,25 @@ class UserAdmin(BaseUserAdmin):
         }),
         ('Permissions', {
             'fields': (
+                'user_permissions',
+            )
+        }),
+        ('Roles', {
+            'fields': (
                 'is_active',
+                'is_residenceadmin',
+                'is_condoadmin',
+                'is_agencyadmin',
+                'is_platformadmin',
                 'is_staff',
                 'is_superuser',
-                'user_permissions',
+            )
+        }),
+        ('Misc', {
+            'fields': (
+                'uuid',
+                'last_login',
+                'created_date'
             )
         }),
     )
@@ -61,27 +104,74 @@ class UserAdmin(BaseUserAdmin):
             'fields': (
                 'email',
                 'password1',
-                'password2'
+                'password2',
             ),
+        }),
+        ('Roles', {
+            'classes': ('wide', 'extrapretty'),
+            'fields': (
+                'is_residenceadmin',
+                'is_condoadmin',
+                'is_agencyadmin',
+                'is_platformadmin',
+                'is_staff',
+                'is_superuser',
+            )
         }),
     )
 
 
-
-""" 
-    def has_add_permission(self, request):
-        if (request.user.is_superuser):
-            return True
+@admin.register(
+    AgencyAdmin,
+    CondoAdmin,
+    PlatformAdmin,
+    ResidenceAdmin,
+    Resident,
+    Security,
+    Supervisor
+)
+class UserTypeAdmin(admin.ModelAdmin):
+    list_display = (
+        'get_email',
+        'get_first_name',
+        'get_last_name',
+        'get_phone',
+        'get_address',
+        'get_is_active',
+        'get_last_login',
+        'get_created_date',
+    )
     
-    def has_change_permission(self, request, obj=None):
-        if (request.user.is_superuser or request.user == obj):
-            return True
+    @admin.display(ordering='user__email', description='email')
+    def get_email(self, obj):
+        return obj.user.email
     
-    def has_delete_permission(self, request, obj=None):
-        if (request.user.is_superuser or request.user == obj):
-            return True
+    @admin.display(ordering='user__first_name', description='first name')
+    def get_first_name(self, obj):
+        return obj.user.first_name
     
-    def has_view_permission(self, request, obj=None):
-        if (request.user.is_staff):
-            return True
- """
+    @admin.display(ordering='user__last_name', description='last name')
+    def get_last_name(self, obj):
+        return obj.user.last_name
+    
+    @admin.display(ordering='user__phone', description='phone')
+    def get_phone(self, obj):
+        return obj.user.phone
+    
+    @admin.display(ordering='user__address', description='address')
+    def get_address(self, obj):
+        return obj.user.address
+    
+    @admin.display(ordering='user__is_active', description='active', boolean=True)
+    def get_is_active(self, obj):
+        return obj.user.is_active
+    
+    @admin.display(ordering='user__last_login', description='last login')
+    def get_last_login(self, obj):
+        return obj.user.last_login
+    
+    @admin.display(ordering='user__created_date', description='created date')
+    def get_created_date(self, obj):
+        return obj.user.created_date
+    
+        

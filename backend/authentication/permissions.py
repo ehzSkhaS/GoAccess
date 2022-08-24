@@ -6,13 +6,13 @@ class IsCurrentUser(permissions.BasePermission):
             return True
 
   
-class IsCurrentUserOwner(permissions.BasePermission):
+class IsOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if obj.owner == request.user:
             return True
 
 
-class IsCurrentUserOwnerOrReadOnly(permissions.BasePermission):
+class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
