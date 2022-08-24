@@ -10,8 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-
+import os
 from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,18 +43,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-        #GeoDjango
-    # 'django.contrib.gis',
-    
     #REST Framework
     'rest_framework',
-    # 'rest_framework.authtoken',
-        
-        #GIS REST Framework
-    # 'rest_framework_gis',
     
     #Apps
     'authentication',
+    'control',
+    'core',
     'logs',
     'structure',
 ]
@@ -62,7 +58,7 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -82,10 +78,17 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+)
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'core/templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -98,6 +101,13 @@ TEMPLATES = [
     },
 ]
 
+APP_ORDER = {
+    "authentication": [ "User", "Resident", "Security", "Supervisor", "ResidenceAdmin", "CondoAdmin", "AgencyAdmin", "PlatformAdmin" ],
+    "structure": [ "Residence", "ResidencialCondo", "CommercialCondo", "Agency", "Platform" ],
+    "control": [ "License", "Area", "Route", "Round" ],
+    "logs": [ "Alert", ],
+} 
+
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
@@ -106,14 +116,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        # 'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'goaccess',
         'USER': 'goaccess',
         'PASSWORD': 'goaccess',
         'HOST': '127.0.0.1',
-        # 'PORT': '5432',
         'PORT': '3306',
     }
 }
@@ -157,9 +164,11 @@ STATIC_URL = 'static/'
 
 
 AUTH_USER_MODEL = 'authentication.User'
+# LOGOUT_REDIRECT_URL = '../'
 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
