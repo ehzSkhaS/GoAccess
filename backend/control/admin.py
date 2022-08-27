@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from control import models
+from ..control import models
 
 admin.site.register(models.License)
 admin.site.register(models.Area)

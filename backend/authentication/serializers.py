@@ -1,8 +1,9 @@
 from rest_framework import serializers
 
 from .models import User
-from structure.models import *
-from structure.serializers import *
+from ..structure.models import *
+from ..structure.serializers import *
+
 
 class LoginSerializer(serializers.ModelSerializer):
     class Meta:
