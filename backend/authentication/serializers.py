@@ -11,11 +11,13 @@ class LoginSerializer(serializers.ModelSerializer):
         
         
 class UserSerializer(serializers.ModelSerializer):
-    
+    last_login = serializers.ReadOnlyField()
+    created_date = serializers.ReadOnlyField()
     class Meta:
         model = User
         fields = [
             'id',
+            'uuid',
             'email',
             # 'password',
             'first_name',
@@ -24,8 +26,17 @@ class UserSerializer(serializers.ModelSerializer):
             'address',
             'image',
             'is_active',
+            'is_resident',
+            'is_security',
+            'is_supervisor',
+            'is_residenceadmin',
+            'is_condoadmin',
+            'is_agencyadmin',
+            'is_platformadmin',
             'is_staff',
             'is_superuser',
-            # 'last_login',
-            # 'created_date',
+            'is_staff',
+            'is_superuser',
+            'last_login',
+            'created_date',
         ]

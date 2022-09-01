@@ -17,24 +17,26 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from authentication.views import UserViewSet
+from authentication.views import UserViewSet, UserList
+from structure.views import PlatformViewSet
 
 router = DefaultRouter()
 
 router.register('users', UserViewSet)
+router.register('platforms', PlatformViewSet)
 
 urlpatterns = [
-    path('manage/', admin.site.urls), 
-    path('api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
-    # path('', include('authentication.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api-manage/', admin.site.urls), 
+    # path('api/', include('authentication.urls')),
 ]
 
-""" 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('rest_framework.urls')),
-    path('', include('authentication.urls')),
-    path('', include('structure.urls')),
-]
- """
+
+# urlpatterns = [
+#     path('admin/', admin.site.urls),
+#     path('', include('rest_framework.urls')),
+#     path('', include('authentication.urls')),
+#     path('', include('structure.urls')),
+# ]
+

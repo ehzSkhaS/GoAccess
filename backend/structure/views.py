@@ -1,16 +1,11 @@
-from rest_framework import generics
+from rest_framework import viewsets
 
 from .models import *
 from .serializers import *
 from authentication.permissions import *
 
 
-class PlatformList(generics.ListAPIView):
+class PlatformViewSet(viewsets.ModelViewSet):
     queryset = Platform.objects.all()
     serializer_class = PlatformSerializer
-    
-    
-class PlatformDetail(generics.RetrieveAPIView):
-    queryset = Platform.objects.all()
-    serializer_class = PlatformSerializer
-    # permission_classes = [IsCurrentUserOwner]
+    permission_classes = [IsCurrentSuperUser]

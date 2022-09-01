@@ -19,15 +19,16 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         else:
             return obj.owner == request.user
 
-""" 
-class IsCurrentUserDomainAdmin(permissions.BasePermission):
-    message = 'You are not the domain admin'
+
+class IsCurrentSuperUser(permissions.BasePermission):
+    message = 'You are not superuser'
     
-    def has_object_permission(self, request, view, obj):
-        if bool(request.user and request.user.is_authenticated and request.user.role == 0):
+    def has_permission(self, request, view):
+        if request.user.is_superuser:
             return True
+    
 
-
+"""
 class IsCurrentUserPlatformAdmin(permissions.BasePermission):
     message = 'You are not the platform admin'
     

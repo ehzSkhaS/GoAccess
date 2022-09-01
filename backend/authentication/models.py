@@ -7,7 +7,7 @@ from .managers import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4, verbose_name='Public identifier')
+    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4, verbose_name='public identifier')
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
@@ -24,8 +24,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_platformadmin = models.BooleanField(default=False, verbose_name='platform admin')
     is_staff = models.BooleanField(default=False, verbose_name='staff')
     is_superuser = models.BooleanField(default=False, verbose_name='superuser')
-    last_login = models.DateTimeField(blank=True, null=True, editable=False, verbose_name='Last login')
-    created_date = models.DateTimeField(default=timezone.now, editable=False, verbose_name='Created date')
+    last_login = models.DateTimeField(blank=True, null=True, editable=False, verbose_name='last login')
+    created_date = models.DateTimeField(default=timezone.now, editable=False, verbose_name='created date')
     
     objects = UserManager()
     

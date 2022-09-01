@@ -37,43 +37,72 @@ class Condo(models.Model):
     address = models.CharField(max_length=255, null=False)
     email = models.CharField(max_length=255, null=True)
     phone = models.CharField(max_length=255, null=True)
+    is_residential = models.BooleanField(default=False, null=False, verbose_name='residential')
     
     class Meta:
-        abstract = True
+        # abstract = True
         db_table = 'condo'
         verbose_name = "Condo"
         verbose_name_plural = "Condos"
         
     def __str__(self):
         return str(self.description)
+    
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        super(Condo, self).save(force_insert, force_update, using, update_fields)
+        
+        if (self.is_residential == True):
+            residential = ResidentialCondo()
+            residential.condo = self
+            residential.save()
+        else:
+            if ResidentialCondo.objects.filter(pk=self).exists():
+                residential = ResidentialCondo.objects.get(pk=self)
+                residential.delete()
+    
 
+# class CommercialCondo(Condo):
+#     class Meta:
+#         db_table = 'commercial_condo'
+#         verbose_name = "Commercial Condo"
+#         verbose_name_plural = "Commercial Condos"
+        
+#     def __str__(self):
+#         return str(self.description)
+    
 
-class ResidencialCondo(Condo):
+class ResidentialCondo(models.Model):
+    condo = models.OneToOneField(Condo, primary_key=True , on_delete=models.CASCADE)
     class Meta:
-        db_table = 'residencial_condo'
-        verbose_name = "Residencial Condo"
-        verbose_name_plural = "Residencial Condos"
+        db_table = 'residential_condo'
+        verbose_name = "Residential Condo"
+        verbose_name_plural = "Residential Condos"
         
     def __str__(self):
-        return str(self.description)
+        return str(self.condo.description)
 
 
-class CommercialCondo(Condo):
+class Area(models.Model):
+    name = models.CharField(max_length=255, null=False)
+    max_people = models.IntegerField(verbose_name="allowed people")
+    is_open = models.BooleanField(default=True, verbose_name='open')
+    condo = models.ForeignKey(ResidentialCondo, on_delete=models.CASCADE)
+    
     class Meta:
-        db_table = 'commercial_condo'
-        verbose_name = "Commercial Condo"
-        verbose_name_plural = "Commercial Condos"
+        db_table = 'area'
+        verbose_name = "Area"
+        verbose_name_plural = "Areas"
         
     def __str__(self):
-        return str(self.description)
+        return str(self.name)
 
 
 class Residence(models.Model):
     description = models.CharField(max_length=255, null=False)
-    owner = models.ForeignKey(to='authentication.ResidenceAdmin', on_delete=models.CASCADE)
-    condo = models.ForeignKey(ResidencialCondo, on_delete=models.CASCADE)
     number = models.IntegerField(null=False)
     street = models.CharField(max_length=255, null=True)
+    owner = models.ForeignKey(to='authentication.ResidenceAdmin', on_delete=models.CASCADE)
+    condo = models.ForeignKey(ResidentialCondo, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'residence'
