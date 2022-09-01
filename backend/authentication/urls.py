@@ -5,21 +5,20 @@ from .views import *
 
 router = DefaultRouter()
 
-# router.register('users', UserViewSet)
+# router.register('users', UserList)
 
 # urlpatterns = [path('', include(router.urls)),]
 
 
 
-urlpatterns = [
-    path('login/', LoginView.as_view())    
-]
+# urlpatterns = [
+#     path('login/', LoginView.as_view())    
+# ]
 
 
 
-""" 
 urlpatterns = [
     path('users/', UserList.as_view()),
     path('users/<int:pk>/', UserDetail.as_view()),
 ]
- """
+
