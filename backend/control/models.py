@@ -150,6 +150,18 @@ class Checkpoint(models.Model):
         return str(self.name)
 
 
+class SentryBox(models.Model):
+    checkpoint = models.OneToOneField(Checkpoint, primary_key=True , on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = 'sentry_box'
+        verbose_name = 'Sentry Box'
+        verbose_name_plural = 'Sentry Boxes'
+        
+    def __str__(self):
+        return str(self.name)
+
+
 class Round(models.Model):
     name = models.CharField(max_length=255, null=False)
     time_ini = models.TimeField(null=False)
@@ -166,18 +178,76 @@ class Round(models.Model):
         return str(self.name)
     
     
-class RouteRound(models.Model):
-    route = models.ForeignKey(Route, null=False, on_delete=models.CASCADE)
+class DutyShift(models.Model):
+    date = models.DateField(default=timezone.now, null=False)
+    sentry = models.ForeignKey(SentryBox, null=False, on_delete=models.CASCADE)
     round = models.ForeignKey(Round, null=False, on_delete=models.CASCADE)
     user = models.ForeignKey(to='authentication.Security', null=False, on_delete=models.CASCADE)
     
     class Meta:
-        db_table = 'route_round'
-        verbose_name = "Route Round"
-        verbose_name_plural = "Route Rounds"
+        db_table = 'duty_shift'
+        verbose_name = 'Duty Shift'
+        verbose_name_plural = 'Duty Shifts'
         
     def __str__(self):
-        return str(self.pk)
+        return str(self.date)
+
+
+class CheckpointLog(models.Model):
+    timestamp = models.DateTimeField(default=timezone.now, editable=False)
+    checkpoint = models.ForeignKey(Checkpoint, null=False, on_delete=models.CASCADE)
+    duty_shift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = 'checkpoint_log'
+        verbose_name = 'Checkpoint Log'
+        verbose_name_plural = 'Checkpoint Logs'
+        
+    def __str__(self):
+        return str(self.timestamp)
+    
+    
+class SentryBoxLog(models.Model):
+    timestamp = models.DateTimeField(default=timezone.now, editable=False)
+    sentry = models.ForeignKey(SentryBox, null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(to='authentication.Supervisor', null=False, on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = 'sentry_box_log'
+        verbose_name = 'Sentry Box Log'
+        verbose_name_plural = 'Sentry Box Logs'
+        
+    def __str__(self):
+        return str(self.timestamp)
+    
+    
+class Report(models.Model):
+    description = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(default=timezone.now, editable=False)
+    duty_shift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = 'report'
+        verbose_name = 'Report'
+        verbose_name_plural = 'Report'
+        
+    def __str__(self):
+        return str(self.description)
+    
+    
+class Supervision(models.Model):
+    description = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(default=timezone.now, editable=False)
+    duty_shift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(to='authentication.Supervisor', null=False, on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = 'supervision'
+        verbose_name = 'Supervision'
+        verbose_name_plural = 'Supervision'
+        
+    def __str__(self):
+        return str(self.description)
 
 
 class Reservation(models.Model):
