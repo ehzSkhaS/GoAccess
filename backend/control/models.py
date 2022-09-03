@@ -16,8 +16,8 @@ class License(models.Model):
     
     class Meta:
         db_table = 'license'
-        verbose_name = "License"
-        verbose_name_plural = "Licenses"
+        verbose_name = 'License'
+        verbose_name_plural = 'Licenses'
         
     def __str__(self):
         return str(self.pk)
@@ -57,8 +57,8 @@ class Type(models.Model):
 
     class Meta:
         db_table = 'type'
-        verbose_name = "Type"
-        verbose_name_plural = "Types"
+        verbose_name = 'Type'
+        verbose_name_plural = 'Types'
         
     def __str__(self):
         return str(self.type)
@@ -85,8 +85,8 @@ class State(models.Model):
     
     class Meta:
         db_table = 'state'
-        verbose_name = "State"
-        verbose_name_plural = "States"
+        verbose_name = 'State'
+        verbose_name_plural = 'States'
         
     def __str__(self):
         return str(self.state)
@@ -99,8 +99,8 @@ class RouteSuperArea(models.Model):
     
     class Meta:
         db_table = 'route_super_area'
-        verbose_name = "Route Super Area"
-        verbose_name_plural = "Route Super Areas"
+        verbose_name = 'Route Super Area'
+        verbose_name_plural = 'Route Super Areas'
         
     def __str__(self):
         return str(self.name)
@@ -110,12 +110,12 @@ class RouteArea(models.Model):
     name = models.CharField(max_length=255, null=False)
     description = models.CharField(max_length=255, null=False)
     condo = models.ForeignKey(to='structure.Condo', null=False, on_delete=models.CASCADE)
-    route_super_area = models.ForeignKey(RouteSuperArea, on_delete=models.CASCADE)
+    route_super_area = models.ForeignKey(RouteSuperArea, null=True, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'route_area'
-        verbose_name = "Route Area"
-        verbose_name_plural = "Route Areas"
+        verbose_name = 'Route Area'
+        verbose_name_plural = 'Route Areas'
         
     def __str__(self):
         return str(self.name)
@@ -128,8 +128,8 @@ class Route(models.Model):
     
     class Meta:
         db_table = 'route'
-        verbose_name = "Route"
-        verbose_name_plural = "Routes"
+        verbose_name = 'Route'
+        verbose_name_plural = 'Routes'
         
     def __str__(self):
         return str(self.name)
@@ -143,8 +143,8 @@ class Checkpoint(models.Model):
     
     class Meta:
         db_table = 'checkpoint'
-        verbose_name = "Checkpoint"
-        verbose_name_plural = "Checkpoints"
+        verbose_name = 'Checkpoint'
+        verbose_name_plural = 'Checkpoints'
         
     def __str__(self):
         return str(self.name)
@@ -155,11 +155,12 @@ class Round(models.Model):
     time_ini = models.TimeField(null=False)
     time_end = models.TimeField(null=False)
     is_active = models.BooleanField(default=False, null=False)
+    condo = models.ForeignKey(to='structure.Condo', null=False, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'round'
-        verbose_name = "Round"
-        verbose_name_plural = "Rounds"
+        verbose_name = 'Round'
+        verbose_name_plural = 'Rounds'
         
     def __str__(self):
         return str(self.name)
@@ -199,8 +200,8 @@ class Reservation(models.Model):
 
     class Meta:
         db_table = 'reservation'
-        verbose_name = "Reservation"
-        verbose_name_plural = "Reservations"
+        verbose_name = 'Reservation'
+        verbose_name_plural = 'Reservations'
         
     def __str__(self):
         return str(self.date)
@@ -214,8 +215,8 @@ class ReservationRegistry(models.Model):
 
     class Meta:
         db_table = 'reservation_registry'
-        verbose_name = "Reservation Registry"
-        verbose_name_plural = "Reservation Registries"
+        verbose_name = 'Reservation Registry'
+        verbose_name_plural = 'Reservation Registries'
         
     def __str__(self):
         return str(self.description)
@@ -251,6 +252,7 @@ class EventReservation(models.Model):
 
     def __str__(self):
         return str(self.pk)
+
 
 class EventArea(models.Model):
     event = models.ForeignKey(Event, null=False, on_delete=models.CASCADE)
