@@ -19,24 +19,34 @@ from rest_framework.routers import DefaultRouter
 
 from authentication.views import UserViewSet, UserList
 from structure.views import PlatformViewSet
+from control.views import RouteSuperAreaViewSet, RouteAreaViewSet, RouteViewSet, CheckpointViewSet, RoundViewSet, RouteRoundViewSet
 
 router = DefaultRouter()
 
 router.register('users', UserViewSet)
 router.register('platforms', PlatformViewSet)
 
+router.register('round', RoundViewSet)
+router.register('route-round', RouteRoundViewSet)
+
+router.register('route-super-area', RouteSuperAreaViewSet)
+router.register('route-area', RouteAreaViewSet)
+router.register('route', RouteViewSet)
+router.register('checkpoint', CheckpointViewSet)
+
+
 urlpatterns = [
-    path('api/', include(router.urls)),
+    path('manage/', admin.site.urls), 
     path('api-auth/', include('rest_framework.urls')),
-    path('api-manage/', admin.site.urls), 
-    # path('api/', include('authentication.urls')),
+    path('api/', include(router.urls)),
+    # path('', include('authentication.urls')),
 ]
 
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('', include('rest_framework.urls')),
-#     path('', include('authentication.urls')),
-#     path('', include('structure.urls')),
-# ]
-
+""" 
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('rest_framework.urls')),
+    path('', include('authentication.urls')),
+    path('', include('structure.urls')),
+]
+ """
