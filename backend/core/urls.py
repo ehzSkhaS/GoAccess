@@ -17,14 +17,21 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from authentication.views import UserViewSet, UserList
-from structure.views import PlatformViewSet, CondoViewSet
+from authentication.views import UserViewSet, UserList, SecurityViewSet, CondoAdminViewSet, AgencyAdminViewSet, PlatformAdminViewSet
+from structure.views import PlatformViewSet, CondoViewSet, AgencyViewSet
 from control.views import RouteSuperAreaViewSet, RouteAreaViewSet, RouteViewSet, CheckpointViewSet, RoundViewSet, RouteRoundViewSet, LicenceViewSet
 
 router = DefaultRouter()
 
 router.register('users', UserViewSet)
 router.register('platforms', PlatformViewSet)
+
+router.register('security', SecurityViewSet)
+router.register('condominium-admin', CondoAdminViewSet)
+router.register('agency', AgencyViewSet)
+
+router.register('agency-admin', AgencyAdminViewSet)
+router.register('platform-admin', PlatformAdminViewSet)
 
 router.register('condominium', CondoViewSet)
 

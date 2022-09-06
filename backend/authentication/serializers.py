@@ -1,8 +1,9 @@
 from rest_framework import serializers
 
-from .models import User
+from .models import User, Security, CondoAdmin, AgencyAdmin, PlatformAdmin
 from structure.models import *
 from structure.serializers import *
+
 
 class LoginSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,6 +14,7 @@ class LoginSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     last_login = serializers.ReadOnlyField()
     created_date = serializers.ReadOnlyField()
+
     class Meta:
         model = User
         fields = [
@@ -40,3 +42,27 @@ class UserSerializer(serializers.ModelSerializer):
             'last_login',
             'created_date',
         ]
+
+
+class SecuritySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Security
+        fields = '__all__'
+
+
+class CondoAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CondoAdmin
+        fields = '__all__'
+
+
+class AgencyAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AgencyAdmin
+        fields = '__all__'
+
+
+class PlatformAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlatformAdmin
+        fields = '__all__'

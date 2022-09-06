@@ -5,9 +5,10 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action, permission_classes, api_view
 
-from .models import User
+from .models import User, Security, CondoAdmin, AgencyAdmin, PlatformAdmin
 from .permissions import *
-from .serializers import UserSerializer, LoginSerializer
+from .serializers import UserSerializer, LoginSerializer, SecuritySerializer, CondoAdminSerializer, AgencyAdminSerializer, PlatformAdminSerializer
+from backend.utils.viewsets import ModelViewSetMixin
 
 
 # class LoginView(generics.RetrieveAPIView):
@@ -43,23 +44,39 @@ from .serializers import UserSerializer, LoginSerializer
 #     serializer_class = UserSerializer
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(ModelViewSetMixin):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsCurrentSuperUser]
     
 
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsCurrentSuperUser]
-        
+
+
 class UserDetail(generics.RetrieveAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsCurrentSuperUser]
-    
-    
-# class RegisterView(generics.CreateAPIView):
-    # pass
+
+
+class SecurityViewSet(ModelViewSetMixin):
+    queryset = Security.objects.all()
+    serializer_class = SecuritySerializer
+
+
+class CondoAdminViewSet(ModelViewSetMixin):
+    queryset = CondoAdmin.objects.all()
+    serializer_class = CondoAdminSerializer
+
+
+class AgencyAdminViewSet(ModelViewSetMixin):
+    queryset = AgencyAdmin.objects.all()
+    serializer_class = AgencyAdminSerializer
+
+
+class PlatformAdminViewSet(ModelViewSetMixin):
+    queryset = AgencyAdmin.objects.all()
+    serializer_class = PlatformAdminSerializer
    
