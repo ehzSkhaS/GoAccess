@@ -2,8 +2,6 @@ from django.contrib import admin
 
 from .models import *
 
-admin.site.register(License)
-
 
 @admin.register(RouteSuperArea)
 class RouteSuperAreaType(admin.ModelAdmin):
@@ -40,5 +38,14 @@ class RouteRoundType(admin.ModelAdmin):
             return element.user.user.email
 
         return f"{element.user.user.first_name} {element.user.user.last_name}"
+
+
+@admin.register(License)
+class LicenseType(admin.ModelAdmin):
+    list_display = ("created", "updated", "end", "quantity", "current_state")
+
+    @admin.display(ordering='state', description='state')
+    def current_state(self, element):
+        return dict(element.LIC_STATES)[element.state]
 
 

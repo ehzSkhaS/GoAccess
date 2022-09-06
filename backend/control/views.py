@@ -1,35 +1,38 @@
-from django.db import transaction
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, generics, response
-from .models import RouteSuperArea, RouteArea, Route, Checkpoint, Round, RouteRound
-from .serializers import RouteSuperAreaSerializer, RouteAreaSerializer, RouteSerializer, CheckpointSerializer, RoundSerializer, RouteRoundSerializer
+from .models import RouteSuperArea, RouteArea, Route, Checkpoint, Round, RouteRound, License
+from .serializers import RouteSuperAreaSerializer, RouteAreaSerializer, RouteSerializer, CheckpointSerializer, RoundSerializer, RouteRoundSerializer, LicenceSerializer
+from backend.utils.viewsets import ModelViewSetMixin
 
 
-class RouteSuperAreaViewSet(viewsets.ModelViewSet):
+class RouteSuperAreaViewSet(ModelViewSetMixin):
     queryset = RouteSuperArea.objects.all()
     serializer_class = RouteSuperAreaSerializer
 
 
-class RouteAreaViewSet(viewsets.ModelViewSet):
+class RouteAreaViewSet(ModelViewSetMixin):
     queryset = RouteArea.objects.all()
     serializer_class = RouteAreaSerializer
 
 
-class RouteViewSet(viewsets.ModelViewSet):
+class RouteViewSet(ModelViewSetMixin):
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
 
 
-class CheckpointViewSet(viewsets.ModelViewSet):
+class CheckpointViewSet(ModelViewSetMixin):
     queryset = Checkpoint.objects.all()
     serializer_class = CheckpointSerializer
 
 
-class RoundViewSet(viewsets.ModelViewSet):
+class RoundViewSet(ModelViewSetMixin):
     queryset = Round.objects.all()
     serializer_class = RoundSerializer
 
 
-class RouteRoundViewSet(viewsets.ModelViewSet):
+class RouteRoundViewSet(ModelViewSetMixin):
     queryset = RouteRound.objects.all()
     serializer_class = RouteRoundSerializer
+
+
+class LicenceViewSet(ModelViewSetMixin):
+    queryset = License.objects.all()
+    serializer_class = LicenceSerializer

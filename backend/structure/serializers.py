@@ -15,10 +15,10 @@ class AgencySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class CondoSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Condo
-#         fields = '__all__'
+class CondoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Condo
+        fields = '__all__'
 
 
 # class ResidencialCondoSerializer(serializers.ModelSerializer):

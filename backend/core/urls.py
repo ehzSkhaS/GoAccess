@@ -18,13 +18,15 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from authentication.views import UserViewSet, UserList
-from structure.views import PlatformViewSet
-from control.views import RouteSuperAreaViewSet, RouteAreaViewSet, RouteViewSet, CheckpointViewSet, RoundViewSet, RouteRoundViewSet
+from structure.views import PlatformViewSet, CondoViewSet
+from control.views import RouteSuperAreaViewSet, RouteAreaViewSet, RouteViewSet, CheckpointViewSet, RoundViewSet, RouteRoundViewSet, LicenceViewSet
 
 router = DefaultRouter()
 
 router.register('users', UserViewSet)
 router.register('platforms', PlatformViewSet)
+
+router.register('condominium', CondoViewSet)
 
 router.register('round', RoundViewSet)
 router.register('route-round', RouteRoundViewSet)
@@ -33,6 +35,7 @@ router.register('route-super-area', RouteSuperAreaViewSet)
 router.register('route-area', RouteAreaViewSet)
 router.register('route', RouteViewSet)
 router.register('checkpoint', CheckpointViewSet)
+router.register('licence', LicenceViewSet)
 
 
 urlpatterns = [

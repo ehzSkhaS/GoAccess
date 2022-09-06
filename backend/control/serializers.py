@@ -38,3 +38,9 @@ class RouteRoundSerializer(serializers.ModelSerializer):
         model = RouteRound
         fields = '__all__'
 
+
+class LicenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = License
+        fields = '__all__'
+
