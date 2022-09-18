@@ -252,6 +252,7 @@ class EventReservation(models.Model):
     def __str__(self):
         return str(self.pk)
 
+
 class EventArea(models.Model):
     event = models.ForeignKey(Event, null=False, on_delete=models.CASCADE)
     area = models.ForeignKey(to='structure.Area', null=False, on_delete=models.CASCADE)
@@ -282,3 +283,65 @@ class InvitationRequest(models.Model):
 
     def __str__(self):
         return str(self.date)
+
+
+class SentryBox(models.Model):
+    checkpoint = models.ForeignKey(Checkpoint, null=False, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'sentry_box'
+        verbose_name = 'Sentry Box'
+
+    def __str__(self):
+        return str(self.checkpoint.name)
+
+
+class SentryBoxLog(models.Model):
+    timestamp = models.DateField(null=False, blank=False, max_length=6)
+    sentry = models.ForeignKey(SentryBox, null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(to='authentication.Supervisor', null=False, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'sentry_box_log'
+        verbose_name = 'Sentry Box Log'
+
+    def __str__(self):
+        return str(self.sentry.checkpoint.name)
+
+
+class DutyShift(models.Model):
+    date = models.DateField(blank=False, null=False)
+    round = models.ForeignKey(Round, null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(to='authentication.Security', null=False, on_delete=models.CASCADE)
+    sentry = models.ForeignKey(SentryBox, null=False, on_delete=models.CASCADE)
+
+
+class Report(models.Model):
+    description = models.CharField(max_length=255, null=False, blank=False)
+    timestamp = models.DateField(blank=False, null=False, max_length=6)
+    dutyshift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'report'
+        verbose_name = 'Report'
+        verbose_name_plural = 'Reports'
+
+
+class Supervision(models.Model):
+    description = models.CharField(max_length=255, null=False, blank=False)
+    timestamp = models.DateField(null=False, blank=False, max_length=6)
+    dutyshift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(to='authentication.Supervisor', null=False, on_delete=models.CASCADE)
+
+
+class CheckpointLog(models.Model):
+    timestamp = models.DateTimeField(null=False, blank=False)
+    checkpoint = models.ForeignKey(Checkpoint, null=False, on_delete=models.CASCADE)
+    dutyshift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'checkpoint_log'
+        verbose_name = 'Checkpoint Log'
+
+    def __str__(self):
+        return str(self.sentry.checkpoint.name)

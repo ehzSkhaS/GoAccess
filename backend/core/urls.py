@@ -19,7 +19,7 @@ from rest_framework.routers import DefaultRouter
 
 from authentication.views import UserViewSet, UserList, SecurityViewSet, CondoAdminViewSet, AgencyAdminViewSet, PlatformAdminViewSet
 from structure.views import PlatformViewSet, CondoViewSet, AgencyViewSet
-from control.views import RouteSuperAreaViewSet, RouteAreaViewSet, RouteViewSet, CheckpointViewSet, RoundViewSet, RouteRoundViewSet, LicenceViewSet
+from control.views import RouteSuperAreaViewSet, RouteAreaViewSet, RouteViewSet, CheckpointViewSet, RoundViewSet, RouteRoundViewSet, LicenceViewSet, SentryBoxViewSet, DutyShiftViewSet, SupervisionViewSet, ReportViewSet
 
 router = DefaultRouter()
 
@@ -43,6 +43,10 @@ router.register('route-area', RouteAreaViewSet)
 router.register('route', RouteViewSet)
 router.register('checkpoint', CheckpointViewSet)
 router.register('licence', LicenceViewSet)
+router.register('sentry-box', SentryBoxViewSet)
+router.register('duty-shift', DutyShiftViewSet)
+router.register('supervision', SupervisionViewSet)
+router.register('report', ReportViewSet)
 
 
 urlpatterns = [

@@ -49,3 +49,20 @@ class LicenseType(admin.ModelAdmin):
         return dict(element.LIC_STATES)[element.state]
 
 
+@admin.register(SentryBox)
+class SentryBoxType(admin.ModelAdmin):
+    list_display = ("checkpoint",)
+
+
+@admin.register(DutyShift)
+class DutyShiftType(admin.ModelAdmin):
+    list_display = ("date", "round", "assigned_user", "sentry")
+
+    @admin.display(ordering='user__id', description='user')
+    def assigned_user(self, element):
+        if element.user.first_name == '':
+            return element.user.email
+
+        return f"{element.user.first_name} {element.user.last_name}"
+
+

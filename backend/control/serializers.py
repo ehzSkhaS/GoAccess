@@ -44,3 +44,39 @@ class LicenceSerializer(serializers.ModelSerializer):
         model = License
         fields = '__all__'
 
+
+class SentryBoxSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SentryBox
+        fields = '__all__'
+
+
+class SentryBoxLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SentryBoxLog
+        fields = '__all__'
+
+
+class CheckpointLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CheckpointLog
+        fields = '__all__'
+
+
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = '__all__'
+
+
+class SupervisionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Supervision
+        fields = '__all__'
+
+
+class DutyShiftSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DutyShift
+        fields = '__all__'
+
