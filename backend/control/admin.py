@@ -66,3 +66,20 @@ class DutyShiftType(admin.ModelAdmin):
         return f"{element.user.first_name} {element.user.last_name}"
 
 
+@admin.register(Report)
+class ReportType(admin.ModelAdmin):
+    list_display = ("description", "timestamp", "dutyshift")
+
+
+@admin.register(Supervision)
+class SupervisionType(admin.ModelAdmin):
+    list_display = ("description", "timestamp", "dutyshift", "assigned_user")
+
+    @admin.display(ordering='timestamp', description='user')
+    def assigned_user(self, element):
+        if element.user.user.first_name == '':
+            return element.user.user.email
+
+        return f"{element.user.user.first_name} {element.user.user.last_name}"
+
+
