@@ -1,5 +1,8 @@
-from .models import RouteSuperArea, RouteArea, Route, Checkpoint, Round, RouteRound, License, SentryBox, DutyShift, Supervision, Report
-from .serializers import RouteSuperAreaSerializer, RouteAreaSerializer, RouteSerializer, CheckpointSerializer, RoundSerializer, RouteRoundSerializer, LicenceSerializer, SentryBoxSerializer, DutyShiftSerializer, SupervisionSerializer, ReportSerializer
+from .models import RouteSuperArea, RouteArea, Route, Checkpoint, Round, License, SentryBox, DutyShift, Supervision, \
+    Report
+from .serializers import RouteSuperAreaSerializer, RouteAreaSerializer, RouteSerializer, CheckpointSerializer, \
+    RoundSerializer, LicenceSerializer, SentryBoxSerializer, DutyShiftSerializer, SupervisionSerializer, \
+    ReportSerializer
 from backend.utils.viewsets import ModelViewSetMixin
 
 
@@ -28,11 +31,6 @@ class RoundViewSet(ModelViewSetMixin):
     serializer_class = RoundSerializer
 
 
-class RouteRoundViewSet(ModelViewSetMixin):
-    queryset = RouteRound.objects.all()
-    serializer_class = RouteRoundSerializer
-
-
 class LicenceViewSet(ModelViewSetMixin):
     queryset = License.objects.all()
     serializer_class = LicenceSerializer
@@ -56,6 +54,5 @@ class DutyShiftViewSet(ModelViewSetMixin):
 class ReportViewSet(ModelViewSetMixin):
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
-
 
 # todo: Create CheckpointLog when user scan qr

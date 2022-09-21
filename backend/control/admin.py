@@ -28,18 +28,6 @@ class RoundType(admin.ModelAdmin):
     list_display = ("name", "time_ini", "time_end", "is_active")
 
 
-@admin.register(RouteRound)
-class RouteRoundType(admin.ModelAdmin):
-    list_display = ("route", "round", "assigned_user")
-
-    @admin.display(ordering='route__name', description='user')
-    def assigned_user(self, element):
-        if element.user.user.first_name == '':
-            return element.user.user.email
-
-        return f"{element.user.user.first_name} {element.user.user.last_name}"
-
-
 @admin.register(License)
 class LicenseType(admin.ModelAdmin):
     list_display = ("created", "updated", "end", "quantity", "current_state")

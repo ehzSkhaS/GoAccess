@@ -33,12 +33,6 @@ class RoundSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RouteRoundSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RouteRound
-        fields = '__all__'
-
-
 class LicenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = License
