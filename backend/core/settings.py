@@ -104,7 +104,7 @@ TEMPLATES = [
 APP_ORDER = {
     "authentication": [ "User", "Resident", "Security", "Supervisor", "ResidenceAdmin", "CondoAdmin", "AgencyAdmin", "PlatformAdmin" ],
     "structure": [ "Residence", "Area", "Condo", "Agency", "Platform" ],
-    "control": [ "License", "Route", "Round" ],
+    "control": [ "License", "Route", "RouteArea", "RouteSuperArea", "Checkpoint", "Round", "SentryBox", "DutyShift", "Report", "Supervision"],
     "logs": [ "Alert", ],
 } 
 

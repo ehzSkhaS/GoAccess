@@ -56,12 +56,12 @@ class DutyShiftType(admin.ModelAdmin):
 
 @admin.register(Report)
 class ReportType(admin.ModelAdmin):
-    list_display = ("description", "timestamp", "dutyshift")
+    list_display = ("description", "timestamp", "duty_shift")
 
 
 @admin.register(Supervision)
 class SupervisionType(admin.ModelAdmin):
-    list_display = ("description", "timestamp", "dutyshift", "assigned_user")
+    list_display = ("description", "timestamp", "duty_shift", "assigned_user")
 
     @admin.display(ordering='timestamp', description='user')
     def assigned_user(self, element):
