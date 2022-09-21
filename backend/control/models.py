@@ -16,8 +16,8 @@ class License(models.Model):
     
     class Meta:
         db_table = 'license'
-        verbose_name = "License"
-        verbose_name_plural = "Licenses"
+        verbose_name = 'License'
+        verbose_name_plural = 'Licenses'
         
     def __str__(self):
         return str(self.pk)
@@ -57,8 +57,8 @@ class Type(models.Model):
 
     class Meta:
         db_table = 'type'
-        verbose_name = "Type"
-        verbose_name_plural = "Types"
+        verbose_name = 'Type'
+        verbose_name_plural = 'Types'
         
     def __str__(self):
         return str(self.type)
@@ -85,8 +85,8 @@ class State(models.Model):
     
     class Meta:
         db_table = 'state'
-        verbose_name = "State"
-        verbose_name_plural = "States"
+        verbose_name = 'State'
+        verbose_name_plural = 'States'
         
     def __str__(self):
         return str(self.state)
@@ -99,8 +99,8 @@ class RouteSuperArea(models.Model):
     
     class Meta:
         db_table = 'route_super_area'
-        verbose_name = "Route Super Area"
-        verbose_name_plural = "Route Super Areas"
+        verbose_name = 'Route Super Area'
+        verbose_name_plural = 'Route Super Areas'
         
     def __str__(self):
         return str(self.name)
@@ -110,12 +110,12 @@ class RouteArea(models.Model):
     name = models.CharField(max_length=255, null=False)
     description = models.CharField(max_length=255, null=False)
     condo = models.ForeignKey(to='structure.Condo', null=False, on_delete=models.CASCADE)
-    route_super_area = models.ForeignKey(RouteSuperArea, on_delete=models.CASCADE)
+    route_super_area = models.ForeignKey(RouteSuperArea, null=True, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'route_area'
-        verbose_name = "Route Area"
-        verbose_name_plural = "Route Areas"
+        verbose_name = 'Route Area'
+        verbose_name_plural = 'Route Areas'
         
     def __str__(self):
         return str(self.name)
@@ -128,8 +128,8 @@ class Route(models.Model):
     
     class Meta:
         db_table = 'route'
-        verbose_name = "Route"
-        verbose_name_plural = "Routes"
+        verbose_name = 'Route'
+        verbose_name_plural = 'Routes'
         
     def __str__(self):
         return str(self.name)
@@ -143,8 +143,20 @@ class Checkpoint(models.Model):
     
     class Meta:
         db_table = 'checkpoint'
-        verbose_name = "Checkpoint"
-        verbose_name_plural = "Checkpoints"
+        verbose_name = 'Checkpoint'
+        verbose_name_plural = 'Checkpoints'
+        
+    def __str__(self):
+        return str(self.name)
+
+
+class SentryBox(models.Model):
+    checkpoint = models.OneToOneField(Checkpoint, primary_key=True , on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = 'sentry_box'
+        verbose_name = 'Sentry Box'
+        verbose_name_plural = 'Sentry Boxes'
         
     def __str__(self):
         return str(self.name)
@@ -155,28 +167,87 @@ class Round(models.Model):
     time_ini = models.TimeField(null=False)
     time_end = models.TimeField(null=False)
     is_active = models.BooleanField(default=False, null=False)
+    condo = models.ForeignKey(to='structure.Condo', null=False, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'round'
-        verbose_name = "Round"
-        verbose_name_plural = "Rounds"
+        verbose_name = 'Round'
+        verbose_name_plural = 'Rounds'
         
     def __str__(self):
         return str(self.name)
     
     
-class RouteRound(models.Model):
-    route = models.ForeignKey(Route, null=False, on_delete=models.CASCADE)
+class DutyShift(models.Model):
+    date = models.DateField(default=timezone.now, null=False)
+    sentry = models.ForeignKey(SentryBox, null=False, on_delete=models.CASCADE)
     round = models.ForeignKey(Round, null=False, on_delete=models.CASCADE)
     user = models.ForeignKey(to='authentication.Security', null=False, on_delete=models.CASCADE)
     
     class Meta:
-        db_table = 'route_round'
-        verbose_name = "Route Round"
-        verbose_name_plural = "Route Rounds"
+        db_table = 'duty_shift'
+        verbose_name = 'Duty Shift'
+        verbose_name_plural = 'Duty Shifts'
         
     def __str__(self):
-        return str(self.pk)
+        return str(self.date)
+
+
+class CheckpointLog(models.Model):
+    timestamp = models.DateTimeField(default=timezone.now, editable=False)
+    checkpoint = models.ForeignKey(Checkpoint, null=False, on_delete=models.CASCADE)
+    duty_shift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = 'checkpoint_log'
+        verbose_name = 'Checkpoint Log'
+        verbose_name_plural = 'Checkpoint Logs'
+        
+    def __str__(self):
+        return str(self.timestamp)
+    
+    
+class SentryBoxLog(models.Model):
+    timestamp = models.DateTimeField(default=timezone.now, editable=False)
+    sentry = models.ForeignKey(SentryBox, null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(to='authentication.Supervisor', null=False, on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = 'sentry_box_log'
+        verbose_name = 'Sentry Box Log'
+        verbose_name_plural = 'Sentry Box Logs'
+        
+    def __str__(self):
+        return str(self.timestamp)
+    
+    
+class Report(models.Model):
+    description = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(default=timezone.now, editable=False)
+    duty_shift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = 'report'
+        verbose_name = 'Report'
+        verbose_name_plural = 'Report'
+        
+    def __str__(self):
+        return str(self.description)
+    
+    
+class Supervision(models.Model):
+    description = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(default=timezone.now, editable=False)
+    duty_shift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(to='authentication.Supervisor', null=False, on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = 'supervision'
+        verbose_name = 'Supervision'
+        verbose_name_plural = 'Supervision'
+        
+    def __str__(self):
+        return str(self.description)
 
 
 class Reservation(models.Model):
@@ -199,8 +270,8 @@ class Reservation(models.Model):
 
     class Meta:
         db_table = 'reservation'
-        verbose_name = "Reservation"
-        verbose_name_plural = "Reservations"
+        verbose_name = 'Reservation'
+        verbose_name_plural = 'Reservations'
         
     def __str__(self):
         return str(self.date)
@@ -214,8 +285,8 @@ class ReservationRegistry(models.Model):
 
     class Meta:
         db_table = 'reservation_registry'
-        verbose_name = "Reservation Registry"
-        verbose_name_plural = "Reservation Registries"
+        verbose_name = 'Reservation Registry'
+        verbose_name_plural = 'Reservation Registries'
         
     def __str__(self):
         return str(self.description)
