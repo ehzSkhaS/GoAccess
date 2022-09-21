@@ -3,5 +3,5 @@ django-filter>=21.1
 django-guardian>=2.4.0
 djangorestframework>=3.13.0
 pygments>=2.12.0
-mysqlclient
+mysql-client
 pyYAML>=6.0
