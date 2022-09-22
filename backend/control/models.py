@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-
+from django.core.exceptions import ValidationError
 
 class License(models.Model):
     LIC_STATES = (
@@ -110,7 +110,8 @@ class RouteArea(models.Model):
     name = models.CharField(max_length=255, null=False)
     description = models.CharField(max_length=255, null=False)
     condo = models.ForeignKey(to='structure.Condo', null=False, on_delete=models.CASCADE)
-    route_super_area = models.ForeignKey(RouteSuperArea, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(to='authentication.Supervisor', null=True, on_delete=models.DO_NOTHING)
+    route_super_area = models.ForeignKey(RouteSuperArea, blank=True ,on_delete=models.DO_NOTHING)
     
     class Meta:
         db_table = 'route_area'
@@ -166,8 +167,7 @@ class Round(models.Model):
     name = models.CharField(max_length=255, null=False)
     time_ini = models.TimeField(null=False)
     time_end = models.TimeField(null=False)
-    is_active = models.BooleanField(default=False, null=False)
-    condo = models.ForeignKey(to='structure.Condo', null=False, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True, null=False)
     
     class Meta:
         db_table = 'round'
@@ -222,21 +222,21 @@ class SentryBoxLog(models.Model):
     
     
 class Report(models.Model):
-    description = models.CharField(max_length=255)
+    description = models.CharField(max_length=255, null=False, blank=False)
     timestamp = models.DateTimeField(default=timezone.now, editable=False)
     duty_shift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'report'
         verbose_name = 'Report'
-        verbose_name_plural = 'Report'
+        verbose_name_plural = 'Reports'
         
     def __str__(self):
         return str(self.description)
     
     
 class Supervision(models.Model):
-    description = models.CharField(max_length=255)
+    description = models.CharField(max_length=255,null=False, blank=False)
     timestamp = models.DateTimeField(default=timezone.now, editable=False)
     duty_shift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
     user = models.ForeignKey(to='authentication.Supervisor', null=False, on_delete=models.CASCADE)
@@ -244,7 +244,7 @@ class Supervision(models.Model):
     class Meta:
         db_table = 'supervision'
         verbose_name = 'Supervision'
-        verbose_name_plural = 'Supervision'
+        verbose_name_plural = 'Supervisions'
         
     def __str__(self):
         return str(self.description)
@@ -355,64 +355,3 @@ class InvitationRequest(models.Model):
     def __str__(self):
         return str(self.date)
 
-
-class SentryBox(models.Model):
-    checkpoint = models.ForeignKey(Checkpoint, null=False, on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = 'sentry_box'
-        verbose_name = 'Sentry Box'
-
-    def __str__(self):
-        return str(self.checkpoint.name)
-
-
-class SentryBoxLog(models.Model):
-    timestamp = models.DateField(null=False, blank=False, max_length=6)
-    sentry = models.ForeignKey(SentryBox, null=False, on_delete=models.CASCADE)
-    user = models.ForeignKey(to='authentication.Supervisor', null=False, on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = 'sentry_box_log'
-        verbose_name = 'Sentry Box Log'
-
-    def __str__(self):
-        return str(self.sentry.checkpoint.name)
-
-
-class DutyShift(models.Model):
-    date = models.DateField(blank=False, null=False)
-    round = models.ForeignKey(Round, null=False, on_delete=models.CASCADE)
-    user = models.ForeignKey(to='authentication.Security', null=False, on_delete=models.CASCADE)
-    sentry = models.ForeignKey(SentryBox, null=False, on_delete=models.CASCADE)
-
-
-class Report(models.Model):
-    description = models.CharField(max_length=255, null=False, blank=False)
-    timestamp = models.DateField(blank=False, null=False, max_length=6)
-    dutyshift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = 'report'
-        verbose_name = 'Report'
-        verbose_name_plural = 'Reports'
-
-
-class Supervision(models.Model):
-    description = models.CharField(max_length=255, null=False, blank=False)
-    timestamp = models.DateField(null=False, blank=False, max_length=6)
-    dutyshift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
-    user = models.ForeignKey(to='authentication.Supervisor', null=False, on_delete=models.CASCADE)
-
-
-class CheckpointLog(models.Model):
-    timestamp = models.DateTimeField(null=False, blank=False)
-    checkpoint = models.ForeignKey(Checkpoint, null=False, on_delete=models.CASCADE)
-    dutyshift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = 'checkpoint_log'
-        verbose_name = 'Checkpoint Log'
-
-    def __str__(self):
-        return str(self.sentry.checkpoint.name)

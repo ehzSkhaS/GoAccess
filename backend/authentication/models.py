@@ -38,6 +38,33 @@ class User(AbstractBaseUser, PermissionsMixin):
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         super(User, self).save(force_insert, force_update, using, update_fields)
         
+        if (self.is_resident == True):
+            resident = Resident()
+            resident.user = self
+            resident.save()
+        else:
+            if Resident.objects.filter(pk=self).exists():
+                resident = Resident.objects.get(pk=self)
+                resident.delete()
+                
+        if (self.is_security == True):
+            security = Security()
+            security.user = self
+            security.save()
+        else:
+            if Security.objects.filter(pk=self).exists():
+                security = Security.objects.get(pk=self)
+                security.delete()
+        
+        if (self.is_supervisor == True):
+            supervisor = Supervisor()
+            supervisor.user = self
+            supervisor.save()
+        else:
+            if Supervisor.objects.filter(pk=self).exists():
+                supervisor = Supervisor.objects.get(pk=self)
+                supervisor.delete()
+        
         if (self.is_residenceadmin == True):
             admin = ResidenceAdmin()
             admin.user = self
@@ -80,7 +107,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Resident(models.Model):
     user = models.OneToOneField(User, primary_key=True , on_delete=models.CASCADE)
-    residence = models.ForeignKey(to='structure.Residence', null=False, on_delete=models.CASCADE)
+    residence = models.ForeignKey(to='structure.Residence', null=True, on_delete=models.DO_NOTHING)
     
     class Meta:
         db_table = 'resident'
@@ -88,13 +115,15 @@ class Resident(models.Model):
         verbose_name_plural = "Residents"
     
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.user.is_resident = True
-        self.user.save()
+        if (self.user.is_resident == False):
+            self.user.is_resident = True
+            self.user.save()
         super(Resident, self).save(force_insert, force_update, using, update_fields)
 
     def delete(self, using=None, keep_parents=False):
-        self.user.is_resident = False
-        self.user.save()
+        if (self.user.is_resident == True):
+            self.user.is_resident = False
+            self.user.save()
         super(Resident, self).delete(using, keep_parents)
         
     def __str__(self):
@@ -103,7 +132,7 @@ class Resident(models.Model):
 
 class Security(models.Model):
     user = models.OneToOneField(User, primary_key=True , on_delete=models.CASCADE)
-    agency = models.ForeignKey(to='structure.Agency', null=False, on_delete=models.CASCADE)
+    agency = models.ForeignKey(to='structure.Agency', null=True, on_delete=models.DO_NOTHING)
         
     class Meta:
         db_table = 'security'
@@ -111,13 +140,15 @@ class Security(models.Model):
         verbose_name_plural = "Securities"
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.user.is_security = True
-        self.user.save()
+        if (self.user.is_security == False):
+            self.user.is_security = True
+            self.user.save()
         super(Security, self).save(force_insert, force_update, using, update_fields)
         
     def delete(self, using=None, keep_parents=False):
-        self.user.is_security = False
-        self.user.save()
+        if (self.user.is_security == True):
+            self.user.is_security = False
+            self.user.save()
         super(Security, self).delete(using, keep_parents)
 
     def __str__(self):
@@ -126,7 +157,7 @@ class Security(models.Model):
         
 class Supervisor(models.Model):
     user = models.OneToOneField(User, primary_key=True , on_delete=models.CASCADE)
-    agency = models.ForeignKey(to='structure.Agency', null=False, on_delete=models.CASCADE)
+    agency = models.ForeignKey(to='structure.Agency', null=True, on_delete=models.DO_NOTHING)
 
     class Meta:
         db_table = 'supervisor'
@@ -134,13 +165,15 @@ class Supervisor(models.Model):
         verbose_name_plural = "Supervisors"
         
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.user.is_supervisor = True
-        self.user.save()
+        if (self.user.is_supervisor == False):
+            self.user.is_supervisor = True
+            self.user.save()
         super(Supervisor, self).save(force_insert, force_update, using, update_fields)
 
     def delete(self, using=None, keep_parents=False):
-        self.user.is_supervisor = False
-        self.user.save()
+        if (self.user.is_supervisor == True):
+            self.user.is_supervisor = False
+            self.user.save()
         super(Supervisor, self).delete(using, keep_parents)
 
     def __str__(self):

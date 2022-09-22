@@ -40,7 +40,6 @@ class Condo(models.Model):
     is_residential = models.BooleanField(default=False, null=False, verbose_name='residential')
     
     class Meta:
-        # abstract = True
         db_table = 'condo'
         verbose_name = "Condo"
         verbose_name_plural = "Condos"
@@ -59,16 +58,6 @@ class Condo(models.Model):
             if ResidentialCondo.objects.filter(pk=self).exists():
                 residential = ResidentialCondo.objects.get(pk=self)
                 residential.delete()
-    
-
-# class CommercialCondo(Condo):
-#     class Meta:
-#         db_table = 'commercial_condo'
-#         verbose_name = "Commercial Condo"
-#         verbose_name_plural = "Commercial Condos"
-        
-#     def __str__(self):
-#         return str(self.description)
     
 
 class ResidentialCondo(models.Model):
