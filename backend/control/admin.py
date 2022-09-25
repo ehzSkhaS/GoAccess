@@ -46,12 +46,12 @@ class SentryBoxType(admin.ModelAdmin):
 class DutyShiftType(admin.ModelAdmin):
     list_display = ("date", "round", "assigned_user", "sentry")
 
-    @admin.display(ordering='user__id', description='user')
+    @admin.display(ordering='user__user__id', description='user')
     def assigned_user(self, element):
-        if element.user.first_name == '':
-            return element.user.email
+        if not element.user.user.first_name:
+            return element.user.user.email
 
-        return f"{element.user.first_name} {element.user.last_name}"
+        return f"{element.user.user.first_name} {element.user.user.last_name}"
 
 
 @admin.register(Report)
@@ -65,7 +65,7 @@ class SupervisionType(admin.ModelAdmin):
 
     @admin.display(ordering='timestamp', description='user')
     def assigned_user(self, element):
-        if element.user.user.first_name == '':
+        if not element.user.user.first_name:
             return element.user.user.email
 
         return f"{element.user.user.first_name} {element.user.user.last_name}"

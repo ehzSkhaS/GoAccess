@@ -81,6 +81,9 @@ class UserAdmin(BaseUserAdmin):
         ('Roles', {
             'fields': (
                 'is_active',
+                'is_resident',
+                'is_security',
+                'is_supervisor',
                 'is_residenceadmin',
                 'is_condoadmin',
                 'is_agencyadmin',
@@ -110,6 +113,9 @@ class UserAdmin(BaseUserAdmin):
         ('Roles', {
             'classes': ('wide', 'extrapretty'),
             'fields': (
+                'is_resident',
+                'is_security',
+                'is_supervisor',
                 'is_residenceadmin',
                 'is_condoadmin',
                 'is_agencyadmin',
@@ -126,9 +132,6 @@ class UserAdmin(BaseUserAdmin):
     CondoAdmin,
     PlatformAdmin,
     ResidenceAdmin,
-    Resident,
-    Security,
-    Supervisor
 )
 class UserTypeAdmin(admin.ModelAdmin):
     list_display = (
@@ -173,5 +176,102 @@ class UserTypeAdmin(admin.ModelAdmin):
     @admin.display(ordering='user__created_date', description='created date')
     def get_created_date(self, obj):
         return obj.user.created_date
+
+
+@admin.register(
+    Security,
+    Supervisor
+)
+class SecurityType(admin.ModelAdmin):
+    list_display = (
+        'get_email',
+        'get_first_name',
+        'get_last_name',
+        'get_phone',
+        'get_address',
+        'get_is_active',
+        'get_last_login',
+        'get_created_date',
+        'agency'
+    )
     
-        
+    @admin.display(ordering='user__email', description='email')
+    def get_email(self, obj):
+        return obj.user.email
+    
+    @admin.display(ordering='user__first_name', description='first name')
+    def get_first_name(self, obj):
+        return obj.user.first_name
+    
+    @admin.display(ordering='user__last_name', description='last name')
+    def get_last_name(self, obj):
+        return obj.user.last_name
+    
+    @admin.display(ordering='user__phone', description='phone')
+    def get_phone(self, obj):
+        return obj.user.phone
+    
+    @admin.display(ordering='user__address', description='address')
+    def get_address(self, obj):
+        return obj.user.address
+    
+    @admin.display(ordering='user__is_active', description='active', boolean=True)
+    def get_is_active(self, obj):
+        return obj.user.is_active
+    
+    @admin.display(ordering='user__last_login', description='last login')
+    def get_last_login(self, obj):
+        return obj.user.last_login
+    
+    @admin.display(ordering='user__created_date', description='created date')
+    def get_created_date(self, obj):
+        return obj.user.created_date
+    
+
+@admin.register(
+    Resident,
+)
+class SecurityType(admin.ModelAdmin):
+    list_display = (
+        'get_email',
+        'get_first_name',
+        'get_last_name',
+        'get_phone',
+        'get_address',
+        'get_is_active',
+        'get_last_login',
+        'get_created_date',
+        'residence'
+    )
+    
+    @admin.display(ordering='user__email', description='email')
+    def get_email(self, obj):
+        return obj.user.email
+    
+    @admin.display(ordering='user__first_name', description='first name')
+    def get_first_name(self, obj):
+        return obj.user.first_name
+    
+    @admin.display(ordering='user__last_name', description='last name')
+    def get_last_name(self, obj):
+        return obj.user.last_name
+    
+    @admin.display(ordering='user__phone', description='phone')
+    def get_phone(self, obj):
+        return obj.user.phone
+    
+    @admin.display(ordering='user__address', description='address')
+    def get_address(self, obj):
+        return obj.user.address
+    
+    @admin.display(ordering='user__is_active', description='active', boolean=True)
+    def get_is_active(self, obj):
+        return obj.user.is_active
+    
+    @admin.display(ordering='user__last_login', description='last login')
+    def get_last_login(self, obj):
+        return obj.user.last_login
+    
+    @admin.display(ordering='user__created_date', description='created date')
+    def get_created_date(self, obj):
+        return obj.user.created_date

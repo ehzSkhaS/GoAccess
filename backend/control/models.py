@@ -2,13 +2,14 @@ from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
+
 class License(models.Model):
     LIC_STATES = (
         (1, 'Enabled'),
         (2, 'Disabled'),
     )    
     
-    created = models.DateField(auto_now_add=True, null=False)
+    created = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now=True)
     end = models.DateField(null=False)
     quantity = models.IntegerField(default=5)
@@ -93,9 +94,10 @@ class State(models.Model):
 
 
 class RouteSuperArea(models.Model):
-    name = models.CharField(max_length=255, null=False)
-    description = models.CharField(max_length=255, null=False)
+    name = models.CharField(max_length=255, blank=False)
+    description = models.CharField(max_length=255, blank=False)
     condo = models.ForeignKey(to='structure.Condo', null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(to='authentication.Supervisor', blank=True, null=True, on_delete=models.DO_NOTHING)
     
     class Meta:
         db_table = 'route_super_area'
@@ -104,14 +106,27 @@ class RouteSuperArea(models.Model):
         
     def __str__(self):
         return str(self.name)
+    
+    def clean(self):
+        from structure.models import Condo
+        try:
+            from authentication.models import Supervisor
+            condo_obj = Condo.objects.get(id = self.condo.id)        
+            supervisor_qobj = Supervisor.objects.filter(user = self.user)
+            
+            if supervisor_qobj.exists():
+                if condo_obj.agency != supervisor_qobj.get().agency:
+                    raise ValidationError({'user': 'Supervisor must belong to the same agency as condo'})    
+        except Condo.DoesNotExist:
+            pass
 
 
 class RouteArea(models.Model):
-    name = models.CharField(max_length=255, null=False)
-    description = models.CharField(max_length=255, null=False)
+    name = models.CharField(max_length=255, blank=False)
+    description = models.CharField(max_length=255, blank=False)
     condo = models.ForeignKey(to='structure.Condo', null=False, on_delete=models.CASCADE)
-    user = models.ForeignKey(to='authentication.Supervisor', null=True, on_delete=models.DO_NOTHING)
-    route_super_area = models.ForeignKey(RouteSuperArea, blank=True ,on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(to='authentication.Supervisor', blank=True, null=True, on_delete=models.DO_NOTHING)
+    route_super_area = models.ForeignKey(RouteSuperArea, blank=True, null=True, on_delete=models.DO_NOTHING)
     
     class Meta:
         db_table = 'route_area'
@@ -120,11 +135,31 @@ class RouteArea(models.Model):
         
     def __str__(self):
         return str(self.name)
+    
+    def clean(self):
+        try:
+            from structure.models import Condo
+            from authentication.models import Supervisor
+            condo_obj = Condo.objects.get(id = self.condo.id)
+            supervisor_qobj = Supervisor.objects.filter(user = self.user)
+            
+            try:
+                route_super_area_obj = RouteSuperArea.objects.get(id = self.route_super_area.id)
+                if condo_obj != route_super_area_obj.condo:
+                    raise ValidationError({'route_super_area': "Route Super Area don't belongs to the same Condo as Route Area"})
+                if supervisor_qobj.exists():
+                    raise ValidationError({'user': "This Route Area is already assigned to a Route Super Area and don't need a Supervisor"})
+            except AttributeError:
+                if supervisor_qobj.exists():
+                    if supervisor_qobj.get().agency != condo_obj.agency:
+                        raise ValidationError({'user': "Supervisor must belong to the same Agency as the Condo"})
+        except Condo.DoesNotExist:
+            pass
 
 
 class Route(models.Model):
-    name = models.CharField(max_length=255, null=False)
-    description = models.CharField(max_length=255, null=False)
+    name = models.CharField(max_length=255, blank=False)
+    description = models.CharField(max_length=255, blank=False)
     route_area = models.ForeignKey(RouteArea, null=False, on_delete=models.CASCADE)
     
     class Meta:
@@ -137,9 +172,9 @@ class Route(models.Model):
 
 
 class Checkpoint(models.Model):
-    name = models.CharField(max_length=255, null=False)
-    description = models.CharField(max_length=255, null=False)
-    qr = models.CharField(max_length=255, null=False)
+    name = models.CharField(max_length=255, blank=False)
+    description = models.CharField(max_length=255, blank=False)
+    qr = models.CharField(max_length=255, blank=False)
     route = models.ForeignKey(Route, null=False, on_delete=models.CASCADE)
     
     class Meta:
@@ -160,14 +195,15 @@ class SentryBox(models.Model):
         verbose_name_plural = 'Sentry Boxes'
         
     def __str__(self):
-        return str(self.name)
+        return str(self.checkpoint.name)
 
 
 class Round(models.Model):
-    name = models.CharField(max_length=255, null=False)
+    name = models.CharField(max_length=255, blank=False)
     time_ini = models.TimeField(null=False)
     time_end = models.TimeField(null=False)
     is_active = models.BooleanField(default=True, null=False)
+    agency = models.ForeignKey(to='structure.Agency', null=False, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'round'
@@ -176,6 +212,13 @@ class Round(models.Model):
         
     def __str__(self):
         return str(self.name)
+
+    def clean(self):
+        try:
+            if self.time_ini > self.time_end:
+                raise ValidationError({'time_ini': "The initial time of the round must be minor than the ending time"})
+        except TypeError:
+            pass
     
     
 class DutyShift(models.Model):
@@ -191,6 +234,22 @@ class DutyShift(models.Model):
         
     def __str__(self):
         return str(self.date)
+    
+    def clean(self):
+        try:
+            from authentication.models import Security
+            sentry_agency = self.sentry.checkpoint.route.route_area.condo.agency
+            round_obj = Round.objects.get(id = self.round.id)
+            security_obj = Security.objects.get(user = self.user)
+            
+            if sentry_agency != security_obj.agency:
+                raise ValidationError({'user': "This security and the sentry don't belong to the same agency"})
+            if sentry_agency != round_obj.agency:
+                raise ValidationError({'round': "This security and the sentry don't belong to the same agency"})
+            if security_obj.agency != round_obj.agency:
+                raise ValidationError({'user': "This security and the round don't belong to the same agency"})
+        except SentryBox.DoesNotExist:
+            pass
 
 
 class CheckpointLog(models.Model):
@@ -248,6 +307,17 @@ class Supervision(models.Model):
         
     def __str__(self):
         return str(self.description)
+    
+    def clean(self):
+        from authentication.models import Supervisor
+        try:
+            if self.user.agency != self.duty_shift.round.agency:
+                raise ValidationError({'user': "This supervisor don't belong to the same agency as the security"})
+            route_area = self.duty_shift.sentry.checkpoint.route.route_area
+            if route_area.user != self.user and route_area.route_super_area.user != self.user:
+                raise ValidationError({'user': "This supervisor can't supervise this area"})           
+        except Supervisor.DoesNotExist:
+            pass
 
 
 class Reservation(models.Model):
