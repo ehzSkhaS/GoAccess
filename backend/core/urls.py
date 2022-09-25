@@ -53,6 +53,7 @@ urlpatterns = [
     path('manage/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
+    path('control/logs/', include('control.urls')),
     # path('', include('authentication.urls')),
 ]
 

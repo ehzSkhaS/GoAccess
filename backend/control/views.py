@@ -1,9 +1,12 @@
+from rest_framework.permissions import IsAuthenticated
+
 from .models import RouteSuperArea, RouteArea, Route, Checkpoint, Round, License, SentryBox, DutyShift, Supervision, \
-    Report
+    Report, SentryBoxLog
 from .serializers import RouteSuperAreaSerializer, RouteAreaSerializer, RouteSerializer, CheckpointSerializer, \
     RoundSerializer, LicenceSerializer, SentryBoxSerializer, DutyShiftSerializer, SupervisionSerializer, \
-    ReportSerializer
+    ReportSerializer, SentryBoxLogSerializer, CheckpointLogSerializer
 from backend.utils.viewsets import ModelViewSetMixin
+from rest_framework.generics import CreateAPIView
 
 
 class RouteSuperAreaViewSet(ModelViewSetMixin):
@@ -55,4 +58,12 @@ class ReportViewSet(ModelViewSetMixin):
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
 
-# todo: Create CheckpointLog when user scan qr
+
+class CreateSentryBoxLog(CreateAPIView):
+    serializer_class = SentryBoxLogSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class CreateCheckpointLog(CreateAPIView):
+    serializer_class = CheckpointLogSerializer
+    permission_classes = [IsAuthenticated]

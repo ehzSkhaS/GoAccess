@@ -7,6 +7,6 @@ router = DefaultRouter()
 
 
 urlpatterns = [
-    path('route-super-area/', RouteSuperAreaList),
-    path('route-super-areas/<int:pk>/', RouteSuperAreaDetail.as_view()),
+    path('create-sentry-box-log/', CreateSentryBoxLog.as_view()),
+    path('create-checkpoint-log/', CreateCheckpointLog.as_view()),
 ]
