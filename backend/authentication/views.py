@@ -8,7 +8,7 @@ from rest_framework.decorators import action, permission_classes, api_view
 from .models import User, Security, CondoAdmin, AgencyAdmin, PlatformAdmin
 from .permissions import *
 from .serializers import UserSerializer, LoginSerializer, SecuritySerializer, CondoAdminSerializer, AgencyAdminSerializer, PlatformAdminSerializer
-from backend.utils.viewsets import ModelViewSetMixin
+from utils.viewsets import ModelViewSetMixin
 
 
 # class LoginView(generics.RetrieveAPIView):

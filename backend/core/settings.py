@@ -118,8 +118,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'goaccess',
-        'USER': 'root',
-        'PASSWORD': 'root',
+        'USER': 'goaccess',
+        'PASSWORD': 'goaccess',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }

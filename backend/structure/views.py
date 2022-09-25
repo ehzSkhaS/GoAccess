@@ -2,7 +2,7 @@ from rest_framework import viewsets
 
 from .models import *
 from .serializers import *
-from backend.utils.viewsets import ModelViewSetMixin
+from utils.viewsets import ModelViewSetMixin
 
 
 class PlatformViewSet(ModelViewSetMixin):

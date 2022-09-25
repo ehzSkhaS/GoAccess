@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from backend.authentication.permissions import IsCurrentSuperUser, IsOwnerOrReadOnly
+from authentication.permissions import IsCurrentSuperUser, IsOwnerOrReadOnly
 
 
 class ModelViewSetMixin(viewsets.ModelViewSet):

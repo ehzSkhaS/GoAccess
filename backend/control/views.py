@@ -5,9 +5,9 @@ from .models import RouteSuperArea, RouteArea, Route, Checkpoint, Round, License
 from .serializers import RouteSuperAreaSerializer, RouteAreaSerializer, RouteSerializer, CheckpointSerializer, \
     RoundSerializer, LicenceSerializer, SentryBoxSerializer, DutyShiftSerializer, SupervisionSerializer, \
     ReportSerializer, SentryBoxLogSerializer, CheckpointLogSerializer
-from backend.utils.viewsets import ModelViewSetMixin
+from utils.viewsets import ModelViewSetMixin
 from rest_framework.generics import CreateAPIView
-
+    
 
 class RouteSuperAreaViewSet(ModelViewSetMixin):
     queryset = RouteSuperArea.objects.all()
