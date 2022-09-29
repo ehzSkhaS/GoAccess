@@ -1,7 +1,9 @@
 from rest_framework import serializers
 
 from .models import *
-        
+from structure.models import *
+from structure.serializers import *
+
         
 class UserSerializer(serializers.ModelSerializer):
     last_login = serializers.ReadOnlyField()
