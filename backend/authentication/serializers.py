@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from .models import User, Security, CondoAdmin, AgencyAdmin, PlatformAdmin
-from structure.models import *
-from structure.serializers import *
+from backend.structure.models import *
+from backend.structure.serializers import *
 
 
 class LoginSerializer(serializers.ModelSerializer):

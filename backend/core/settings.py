@@ -47,11 +47,11 @@ INSTALLED_APPS = [
     'rest_framework',
     
     #Apps
-    'authentication',
-    'control',
-    'core',
-    'logs',
-    'structure',
+    'backend.authentication',
+    'backend.control',
+    'backend.core',
+    'backend.logs',
+    'backend.structure',
 ]
 
 
@@ -118,8 +118,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'goaccess',
-        'USER': 'goaccess',
-        'PASSWORD': 'goaccess',
+        'USER': 'root',
+        'PASSWORD': 'root',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
