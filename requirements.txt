@@ -5,3 +5,5 @@ djangorestframework>=3.13.0
 pygments>=2.12.0
 mysql-client
 pyYAML>=6.0
+requests
+django-cors-headers
