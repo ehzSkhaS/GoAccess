@@ -1,14 +1,6 @@
 from django.contrib import admin
 
-from .models import(
-    Agency,
-    Area,
-    # CommercialCondo,
-    Condo,
-    Platform,
-    Residence,
-    ResidentialCondo
-)
+from .models import *
 
 
 @admin.register(Platform)
@@ -149,53 +141,9 @@ class CondoType(admin.ModelAdmin):
     @admin.display(ordering='agency__name', description='agency')
     def get_agency(self, obj):
         return obj.agency.name
-    
-    
-# @admin.register(ResidentialCondo)
-# class ResidentialCondoType(admin.ModelAdmin):
-#     list_display = (
-#         'get_description',
-#         'get_address',
-#         'get_email',
-#         'get_phone',
-#         'get_admin_email',
-#         'get_is_active',
-#         'get_last_login',
-#         'get_agency'
-#     )
-    
-#     @admin.display(ordering='condo__description', description='description')
-#     def get_description(self, obj):
-#         return obj.condo.description
-    
-#     @admin.display(ordering='condo__address', description='address')
-#     def get_address(self, obj):
-#         return obj.condo.address
-    
-#     @admin.display(ordering='condo__email', description='email')
-#     def get_email(self, obj):
-#         return obj.condo.email
-    
-#     @admin.display(ordering='condo__phone', description='phone')
-#     def get_phone(self, obj):
-#         return obj.condo.phone
-    
-#     @admin.display(ordering='condo__owner__user__email', description='admin email')
-#     def get_admin_email(self, obj):
-#         return obj.condo.owner.user.email
-    
-#     @admin.display(ordering='condo__owner__user__is_active', description='active', boolean=True)
-#     def get_is_active(self, obj):
-#         return obj.condo.owner.user.is_active
-    
-#     @admin.display(ordering='condo__owner__user__last_login', description='last login')
-#     def get_last_login(self, obj):
-#         return obj.condo.owner.user.last_login
-    
-#     @admin.display(ordering='condo__agency__name', description='agency')
-#     def get_agency(self, obj):
-#         return obj.condo.agency.name
-    
+
+
+
 @admin.register(Area)
 class AreaType(admin.ModelAdmin):
     list_display = (

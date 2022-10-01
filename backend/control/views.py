@@ -1,12 +1,6 @@
-from rest_framework.permissions import IsAuthenticated
-
-from .models import RouteSuperArea, RouteArea, Route, Checkpoint, Round, License, SentryBox, DutyShift, Supervision, \
-    Report, SentryBoxLog
-from .serializers import RouteSuperAreaSerializer, RouteAreaSerializer, RouteSerializer, CheckpointSerializer, \
-    RoundSerializer, LicenceSerializer, SentryBoxSerializer, DutyShiftSerializer, SupervisionSerializer, \
-    ReportSerializer, SentryBoxLogSerializer, CheckpointLogSerializer
 from utils.viewsets import ModelViewSetMixin
-from rest_framework.generics import CreateAPIView
+
+from .serializers import *
     
 
 class RouteSuperAreaViewSet(ModelViewSetMixin):
@@ -59,11 +53,11 @@ class ReportViewSet(ModelViewSetMixin):
     serializer_class = ReportSerializer
 
 
-class CreateSentryBoxLog(CreateAPIView):
+class SentryBoxLogViewSet(ModelViewSetMixin):
+    queryset = SentryBoxLog.objects.all()
     serializer_class = SentryBoxLogSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class CreateCheckpointLog(CreateAPIView):
+class CheckpointLogViewSet(ModelViewSetMixin):
+    queryset = CheckpointLog.objects.all()
     serializer_class = CheckpointLogSerializer
-    permission_classes = [IsAuthenticated]

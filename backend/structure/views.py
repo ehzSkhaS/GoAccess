@@ -1,8 +1,6 @@
-from rest_framework import viewsets
-
-from .models import *
-from .serializers import *
 from utils.viewsets import ModelViewSetMixin
+
+from .serializers import *
 
 
 class PlatformViewSet(ModelViewSetMixin):
@@ -10,11 +8,11 @@ class PlatformViewSet(ModelViewSetMixin):
     serializer_class = PlatformSerializer
 
 
-class CondoViewSet(ModelViewSetMixin):
-    queryset = Condo.objects.all()
-    serializer_class = CondoSerializer
-
-
 class AgencyViewSet(ModelViewSetMixin):
     queryset = Agency.objects.all()
     serializer_class = AgencySerializer
+
+
+class CondoViewSet(ModelViewSetMixin):
+    queryset = Condo.objects.all()
+    serializer_class = CondoSerializer

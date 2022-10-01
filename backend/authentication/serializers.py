@@ -1,14 +1,6 @@
 from rest_framework import serializers
 
-from .models import User, Security, CondoAdmin, AgencyAdmin, PlatformAdmin
-from structure.models import *
-from structure.serializers import *
-
-
-class LoginSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['email', 'password']
+from .models import *
         
         
 class UserSerializer(serializers.ModelSerializer):
@@ -21,7 +13,6 @@ class UserSerializer(serializers.ModelSerializer):
             'id',
             'uuid',
             'email',
-            # 'password',
             'first_name',
             'last_name',
             'phone',

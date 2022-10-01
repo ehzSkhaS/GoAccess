@@ -1,5 +1,4 @@
 from django import forms
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
 from .models import User
@@ -37,12 +36,3 @@ class UserCreationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
-
-
-# class UserChangeForm(forms.ModelForm):
-#     password = ReadOnlyPasswordHashField()
-
-#     class Meta:
-#         model = User
-#         fields = ('email', 'password', 'is_active', 'is_staff', 'is_superuser')
-

@@ -1,24 +1,12 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 
 from .views import *
 
-router = DefaultRouter()
+router_auth = SimpleRouter()
 
-# router.register('users', UserList)
-
-# urlpatterns = [path('', include(router.urls)),]
-
-
-
-# urlpatterns = [
-#     path('login/', LoginView.as_view())    
-# ]
-
-
-
-urlpatterns = [
-    path('users/', UserList.as_view()),
-    path('users/<int:pk>/', UserDetail.as_view()),
-]
+router_auth.register('users', UserViewSet)
+router_auth.register('security', SecurityViewSet)
+router_auth.register('condominium-admin', CondoAdminViewSet)
+router_auth.register('agency-admin', AgencyAdminViewSet)
+router_auth.register('platform-admin', PlatformAdminViewSet)
 

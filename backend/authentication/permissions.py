@@ -1,5 +1,6 @@
 from rest_framework import permissions
 
+
 class IsCurrentUser(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if obj == request.user:
@@ -27,6 +28,15 @@ class IsCurrentSuperUser(permissions.BasePermission):
         if request.user.is_superuser:
             return True
     
+
+class PlatformAdminPerms(permissions.BasePermission):
+    
+    def has_permission(self, request, view):
+        if view.action in ['list', 'create', 'destroy']:
+            return request.user.is_superuser
+        # if view.action in ['retrieve', 'update', 'partial_update']:
+        #     return request.user.is_superuser or 
+            
 
 """
 class IsCurrentUserPlatformAdmin(permissions.BasePermission):

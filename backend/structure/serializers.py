@@ -20,14 +20,3 @@ class CondoSerializer(serializers.ModelSerializer):
         model = Condo
         fields = '__all__'
 
-
-# class ResidencialCondoSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ResidencialCondo
-#         fields = '__all__'
-
-
-# class ResidenceSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Residence
-#         fields = '__all__'

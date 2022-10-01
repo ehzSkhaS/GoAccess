@@ -1,8 +1,9 @@
-from django.urls import path
+from rest_framework.routers import SimpleRouter
 
 from .views import *
 
-urlpatterns = [
-    # path('platforms/', PlatformList.as_view()),
-    # path('platforms/<int:pk>/', PlatformDetail.as_view()),
-]
+router_structure = SimpleRouter()
+
+router_structure.register('condominium', CondoViewSet)
+router_structure.register('agency', AgencyViewSet)
+router_structure.register('platforms', PlatformViewSet)
