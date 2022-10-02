@@ -24,6 +24,6 @@ class AgencyAdminViewSet(ModelViewSetMixin):
 
 
 class PlatformAdminViewSet(ModelViewSetMixin):
-    queryset = AgencyAdmin.objects.all()
+    queryset = PlatformAdmin.objects.all()
     serializer_class = PlatformAdminSerializer
    

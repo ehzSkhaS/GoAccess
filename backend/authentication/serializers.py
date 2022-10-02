@@ -4,7 +4,7 @@ from .models import *
 from structure.models import *
 from structure.serializers import *
 
-        
+
 class UserSerializer(serializers.ModelSerializer):
     last_login = serializers.ReadOnlyField()
     created_date = serializers.ReadOnlyField()
