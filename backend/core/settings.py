@@ -31,11 +31,11 @@ INSTALLED_APPS = [
     'rest_framework',
     
     #Apps
-    'authentication',
-    'control',
-    'core',
-    'logs',
-    'structure',
+    'backend.authentication',
+    'backend.control',
+    'backend.core',
+    'backend.logs',
+    'backend.structure',
 ]
 
 REST_FRAMEWORK = {

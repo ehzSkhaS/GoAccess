@@ -5,6 +5,12 @@ from structure.models import *
 from structure.serializers import *
 
 
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'password']
+        
+        
 class UserSerializer(serializers.ModelSerializer):
     last_login = serializers.ReadOnlyField()
     created_date = serializers.ReadOnlyField()
@@ -15,6 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
             'id',
             'uuid',
             'email',
+            # 'password',
             'first_name',
             'last_name',
             'phone',

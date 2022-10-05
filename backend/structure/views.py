@@ -1,5 +1,6 @@
 from utils.viewsets import ModelViewSetMixin
 
+from .models import *
 from .serializers import *
 
 
