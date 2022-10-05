@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from .models import *
-from .forms import UserCreationForm
+from .forms import UserCreationForm, SecurityCreationForm
 
 
 admin.site.unregister(Group)
@@ -174,6 +174,7 @@ class UserTypeAdmin(admin.ModelAdmin):
     Supervisor
 )
 class SecurityType(admin.ModelAdmin):
+    form = SecurityCreationForm
     list_display = (
         'get_email',
         'get_first_name',
