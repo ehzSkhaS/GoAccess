@@ -1,3 +1,5 @@
+from rest_framework.viewsets import ViewSetMixin
+from rest_framework.generics import GenericAPIView
 from utils.viewsets import ModelViewSetMixin
 
 from .serializers import *
@@ -26,4 +28,15 @@ class AgencyAdminViewSet(ModelViewSetMixin):
 class PlatformAdminViewSet(ModelViewSetMixin):
     queryset = PlatformAdmin.objects.all()
     serializer_class = PlatformAdminSerializer
-   
+
+
+class SecurityAccountConfirmViewSet(ModelViewSetMixin):
+    queryset = User.objects.all()
+    serializer_class = ConfirmAccountSerializer
+    lookup_field = 'uuid'
+
+    def get_queryset(self):
+        if User.objects.filter(uuid=self.kwargs['uuid'], is_active=False):
+            return self.queryset
+
+        return None

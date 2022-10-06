@@ -1,4 +1,6 @@
+from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
+from rest_framework.fields import Field
 
 from .models import *
 from structure.models import *
@@ -66,3 +68,30 @@ class PlatformAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlatformAdmin
         fields = '__all__'
+
+
+class ConfirmAccountSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
+    phone = serializers.CharField(required=True)
+    address = serializers.CharField(required=True)
+    password = serializers.CharField(style={'input_type': 'password'})
+
+    class Meta:
+        model = User
+        fields = ['first_name',
+                  'last_name',
+                  'phone',
+                  'address',
+                  'password'
+                  ]
+
+    def save(self, **kwargs):
+        self.instance.first_name = self.validated_data['first_name']
+        self.instance.last_name = self.validated_data['last_name']
+        self.instance.phone = self.validated_data['phone']
+        self.instance.address = self.validated_data['address']
+        self.instance.password = make_password(self.validated_data['password'])
+        self.instance.is_active = True
+        self.instance.save()
+

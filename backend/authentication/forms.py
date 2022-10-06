@@ -1,9 +1,8 @@
-from smtplib import SMTPException
-
 from django import forms
 from django.core.exceptions import ValidationError
-
-import smtplib
+from django.core.mail import EmailMessage, BadHeaderError
+from django.template.loader import get_template
+from django.template import Context
 
 from .models import User, Security
 
@@ -47,7 +46,7 @@ class SecurityCreationForm(forms.ModelForm):
 
     class Meta:
         model = Security
-        fields = ('security_email', )
+        fields = ('security_email', 'agency')
 
     def clean_security_email(self):
         security_email = self.cleaned_data["security_email"]
@@ -63,25 +62,15 @@ class SecurityCreationForm(forms.ModelForm):
         user.save()
 
         # send email to complete the registration process
-        message = """From: From Person <{}>
-        To: To Person <{}>
-        MIME-Version: 1.0
-        Content-type: text/html
-        Subject: System Registration
-
-        This is a registration email, to confirm the account clic on the link below \n
-        http://localhost:8000/api/confirm_account/{}/
-
-        <b>This is an automatically generated e-mail, please do not reply.</b>
-        <h1>System Registration.</h1>
-        """.format("reg_system@test.com", self.cleaned_data["security_email"], str(user.uuid))
-
         try:
-            mail_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-            mail_server.login("es3824@gmail.com", 'S@linas2011')
-            mail_server.sendmail("reg_system@test.com", [self.cleaned_data["security_email"]], message)
-            mail_server.close()
-        except SMTPException as error:
+            subject, from_email, to = 'System Registration', 'reg_system@test.com', self.cleaned_data["security_email"]
+            mail_context = {"confirm_url": "http://localhost:8000/api/security/confirm-account/{}/".format(str(user.uuid))}
+            message = get_template('emails/registration.html').render(mail_context)
+            email = EmailMessage(subject, message, from_email, [to])
+            email.content_subtype = "html"
+            email.send()
+
+        except BadHeaderError as error:
             raise ValidationError("Unable to send email.")
 
         security.user = user
