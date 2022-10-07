@@ -40,3 +40,15 @@ class SecurityAccountConfirmViewSet(ModelViewSetMixin):
             return self.queryset
 
         return None
+
+
+class SupervisorAccountConfirmViewSet(ModelViewSetMixin):
+    queryset = User.objects.all()
+    serializer_class = ConfirmAccountSerializer
+    lookup_field = 'uuid'
+
+    def get_queryset(self):
+        if User.objects.filter(uuid=self.kwargs['uuid'], is_active=False):
+            return self.queryset
+
+        return None

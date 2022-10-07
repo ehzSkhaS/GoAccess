@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from .models import *
-from .forms import UserCreationForm, SecurityCreationForm
+from .forms import UserCreationForm, SecurityCreationForm, SupervisorCreationForm
 
 
 admin.site.unregister(Group)
@@ -174,7 +174,6 @@ class UserTypeAdmin(admin.ModelAdmin):
     Supervisor
 )
 class SecurityType(admin.ModelAdmin):
-    form = SecurityCreationForm
     list_display = (
         'get_email',
         'get_first_name',
@@ -218,7 +217,16 @@ class SecurityType(admin.ModelAdmin):
     @admin.display(ordering='user__created_date', description='created date')
     def get_created_date(self, obj):
         return obj.user.created_date
-    
+
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        if self.model is Security:
+            form = SecurityCreationForm
+        elif self.model is Supervisor:
+            form = SupervisorCreationForm
+            form.connected_user = request.user
+
+            return form
+
 
 @admin.register(
     Resident,
