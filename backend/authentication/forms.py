@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage, BadHeaderError
 from django.template.loader import get_template
 
-from .models import User, Security
+from .models import User, Security, Supervisor
 from structure.models import Agency
 
 
@@ -63,6 +63,8 @@ class SecurityCreationForm(forms.ModelForm):
         user = User(email=self.cleaned_data["security_email"], is_active=False, is_security=True)
         user.save()
 
+        security = Security.objects.get(user=user)
+
         # send email to complete the registration process
         try:
             subject, from_email, to = 'System Registration', 'reg_system@test.com', self.cleaned_data["security_email"]
@@ -77,7 +79,6 @@ class SecurityCreationForm(forms.ModelForm):
 
         agency = Agency.objects.get(owner__user=self.connected_user)
 
-        security.user = user
         security.agency = agency
         security.save()
 
@@ -106,6 +107,8 @@ class SupervisorCreationForm(forms.ModelForm):
         user = User(email=self.cleaned_data["supervisor_email"], is_active=False, is_supervisor=True)
         user.save()
 
+        supervisor = Supervisor.objects.get(user=user)
+
         # send email to complete the registration process
         try:
             subject, from_email, to = 'System Registration', 'reg_system@test.com', self.cleaned_data["supervisor_email"]
@@ -120,7 +123,6 @@ class SupervisorCreationForm(forms.ModelForm):
 
         agency = Agency.objects.get(owner__user=self.connected_user)
 
-        supervisor.user = user
         supervisor.agency = agency
         supervisor.save()
 

@@ -223,9 +223,9 @@ class SecurityType(admin.ModelAdmin):
             form = SecurityCreationForm
         elif self.model is Supervisor:
             form = SupervisorCreationForm
-            form.connected_user = request.user
+        form.connected_user = request.user
 
-            return form
+        return form
 
 
 @admin.register(
