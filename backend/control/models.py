@@ -96,8 +96,8 @@ class State(models.Model):
 class RouteSuperArea(models.Model):
     name = models.CharField(max_length=255, blank=False)
     description = models.CharField(max_length=255, blank=False)
-    condo = models.ForeignKey(to='structure.Condo', null=False, on_delete=models.CASCADE)
-    user = models.ForeignKey(to='authentication.Supervisor', blank=True, null=True, on_delete=models.DO_NOTHING)
+    condo = models.ForeignKey(to='structure.Condo', related_name='routesuperarea', null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(to='authentication.Supervisor', related_name='routesuperarea', blank=True, null=True, on_delete=models.DO_NOTHING)
     
     class Meta:
         db_table = 'route_super_area'
@@ -124,9 +124,9 @@ class RouteSuperArea(models.Model):
 class RouteArea(models.Model):
     name = models.CharField(max_length=255, blank=False)
     description = models.CharField(max_length=255, blank=False)
-    condo = models.ForeignKey(to='structure.Condo', null=False, on_delete=models.CASCADE)
-    user = models.ForeignKey(to='authentication.Supervisor', blank=True, null=True, on_delete=models.DO_NOTHING)
-    route_super_area = models.ForeignKey(RouteSuperArea, blank=True, null=True, on_delete=models.DO_NOTHING)
+    condo = models.ForeignKey(to='structure.Condo', related_name='routearea', null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(to='authentication.Supervisor', related_name='routearea', blank=True, null=True, on_delete=models.DO_NOTHING)
+    route_super_area = models.ForeignKey(RouteSuperArea, related_name='routearea', blank=True, null=True, on_delete=models.DO_NOTHING)
     
     class Meta:
         db_table = 'route_area'
@@ -160,7 +160,7 @@ class RouteArea(models.Model):
 class Route(models.Model):
     name = models.CharField(max_length=255, blank=False)
     description = models.CharField(max_length=255, blank=False)
-    route_area = models.ForeignKey(RouteArea, null=False, on_delete=models.CASCADE)
+    route_area = models.ForeignKey(RouteArea, related_name='route', null=False, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'route'
@@ -175,7 +175,7 @@ class Checkpoint(models.Model):
     name = models.CharField(max_length=255, blank=False)
     description = models.CharField(max_length=255, blank=False)
     qr = models.CharField(max_length=255, blank=False)
-    route = models.ForeignKey(Route, null=False, on_delete=models.CASCADE)
+    route = models.ForeignKey(Route, related_name='checkpoint', null=False, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'checkpoint'
@@ -203,7 +203,7 @@ class Round(models.Model):
     time_ini = models.TimeField(null=False)
     time_end = models.TimeField(null=False)
     is_active = models.BooleanField(default=True, null=False)
-    agency = models.ForeignKey(to='structure.Agency', null=False, on_delete=models.CASCADE)
+    agency = models.ForeignKey(to='structure.Agency', related_name='round', null=False, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'round'
@@ -223,9 +223,9 @@ class Round(models.Model):
     
 class DutyShift(models.Model):
     date = models.DateField(default=timezone.now, null=False)
-    sentry = models.ForeignKey(SentryBox, null=False, on_delete=models.CASCADE)
-    round = models.ForeignKey(Round, null=False, on_delete=models.CASCADE)
-    user = models.ForeignKey(to='authentication.Security', null=False, on_delete=models.CASCADE)
+    sentry = models.ForeignKey(SentryBox, related_name='dutyshift', null=False, on_delete=models.CASCADE)
+    round = models.ForeignKey(Round, related_name='dutyshift', null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(to='authentication.Security', related_name='dutyshift', null=False, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'duty_shift'
@@ -254,8 +254,8 @@ class DutyShift(models.Model):
 
 class CheckpointLog(models.Model):
     timestamp = models.DateTimeField(default=timezone.now, editable=False)
-    checkpoint = models.ForeignKey(Checkpoint, null=False, on_delete=models.CASCADE)
-    duty_shift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
+    checkpoint = models.ForeignKey(Checkpoint, related_name='checkpointlog', null=False, on_delete=models.CASCADE)
+    duty_shift = models.ForeignKey(DutyShift, related_name='checkpointlog', null=False, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'checkpoint_log'
@@ -268,8 +268,8 @@ class CheckpointLog(models.Model):
     
 class SentryBoxLog(models.Model):
     timestamp = models.DateTimeField(default=timezone.now, editable=False)
-    sentry = models.ForeignKey(SentryBox, null=False, on_delete=models.CASCADE)
-    user = models.ForeignKey(to='authentication.Supervisor', null=False, on_delete=models.CASCADE)
+    sentry = models.ForeignKey(SentryBox, related_name='sentryboxlog', null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(to='authentication.Supervisor', related_name='sentryboxlog', null=False, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'sentry_box_log'
@@ -283,7 +283,7 @@ class SentryBoxLog(models.Model):
 class Report(models.Model):
     description = models.CharField(max_length=255, null=False, blank=False)
     timestamp = models.DateTimeField(default=timezone.now, editable=False)
-    duty_shift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
+    duty_shift = models.ForeignKey(DutyShift, related_name='report', null=False, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'report'
@@ -297,8 +297,8 @@ class Report(models.Model):
 class Supervision(models.Model):
     description = models.CharField(max_length=255,null=False, blank=False)
     timestamp = models.DateTimeField(default=timezone.now, editable=False)
-    duty_shift = models.ForeignKey(DutyShift, null=False, on_delete=models.CASCADE)
-    user = models.ForeignKey(to='authentication.Supervisor', null=False, on_delete=models.CASCADE)
+    duty_shift = models.ForeignKey(DutyShift, related_name='supervision', null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(to='authentication.Supervisor', related_name='supervision', null=False, on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'supervision'

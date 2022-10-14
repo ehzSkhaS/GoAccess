@@ -3,7 +3,7 @@ from django.db import models
     
 class Platform(models.Model):
     name = models.CharField(max_length=255, null=False)
-    owner = models.ForeignKey(to='authentication.PlatformAdmin', null=False, on_delete=models.CASCADE)
+    owner = models.ForeignKey(to='authentication.PlatformAdmin', related_name='platform', null=False, on_delete=models.CASCADE)
     lic = models.OneToOneField(to='control.License', null=False, on_delete=models.CASCADE)
     
     class Meta:
@@ -17,9 +17,9 @@ class Platform(models.Model):
 
 class Agency(models.Model):
     name = models.CharField(max_length=255, null=False)
-    owner = models.ForeignKey(to='authentication.AgencyAdmin', null=False, on_delete=models.CASCADE)
+    owner = models.ForeignKey(to='authentication.AgencyAdmin', related_name='agency', null=False, on_delete=models.CASCADE)
     lic = models.OneToOneField(to='control.License', null=False, on_delete=models.CASCADE)
-    platform = models.ForeignKey(Platform, on_delete=models.CASCADE)
+    platform = models.ForeignKey(Platform, related_name='agency', on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'agency'
@@ -32,8 +32,8 @@ class Agency(models.Model):
     
 class Condo(models.Model):
     description = models.CharField(max_length=255, null=True)
-    owner = models.ForeignKey(to='authentication.CondoAdmin', on_delete=models.CASCADE)
-    agency = models.ForeignKey(Agency, on_delete=models.CASCADE)
+    owner = models.ForeignKey(to='authentication.CondoAdmin', related_name='condo', on_delete=models.CASCADE)
+    agency = models.ForeignKey(Agency, related_name='condo', on_delete=models.CASCADE)
     address = models.CharField(max_length=255, null=False)
     email = models.CharField(max_length=255, null=True)
     phone = models.CharField(max_length=255, null=True)
@@ -75,7 +75,7 @@ class Area(models.Model):
     name = models.CharField(max_length=255, null=False)
     max_people = models.IntegerField(verbose_name="allowed people")
     is_open = models.BooleanField(default=True, verbose_name='open')
-    condo = models.ForeignKey(ResidentialCondo, on_delete=models.CASCADE)
+    condo = models.ForeignKey(ResidentialCondo, related_name='area', on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'area'
@@ -90,8 +90,8 @@ class Residence(models.Model):
     description = models.CharField(max_length=255, null=False)
     number = models.IntegerField(null=False)
     street = models.CharField(max_length=255, null=True)
-    owner = models.ForeignKey(to='authentication.ResidenceAdmin', on_delete=models.CASCADE)
-    condo = models.ForeignKey(ResidentialCondo, on_delete=models.CASCADE)
+    owner = models.ForeignKey(to='authentication.ResidenceAdmin', related_name='residence', on_delete=models.CASCADE)
+    condo = models.ForeignKey(ResidentialCondo, related_name='residence', on_delete=models.CASCADE)
     
     class Meta:
         db_table = 'residence'

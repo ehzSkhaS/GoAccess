@@ -107,7 +107,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Resident(models.Model):
     user = models.OneToOneField(User, primary_key=True , on_delete=models.CASCADE)
-    residence = models.ForeignKey(to='structure.Residence', null=True, on_delete=models.DO_NOTHING)
+    residence = models.ForeignKey(to='structure.Residence', related_name='resident', null=True, on_delete=models.DO_NOTHING)
     
     class Meta:
         db_table = 'resident'
@@ -132,7 +132,7 @@ class Resident(models.Model):
 
 class Security(models.Model):
     user = models.OneToOneField(User, primary_key=True , on_delete=models.CASCADE)
-    agency = models.ForeignKey(to='structure.Agency', null=True, on_delete=models.DO_NOTHING)
+    agency = models.ForeignKey(to='structure.Agency', related_name='security', null=True, on_delete=models.DO_NOTHING)
         
     class Meta:
         db_table = 'security'
@@ -157,7 +157,7 @@ class Security(models.Model):
         
 class Supervisor(models.Model):
     user = models.OneToOneField(User, primary_key=True , on_delete=models.CASCADE)
-    agency = models.ForeignKey(to='structure.Agency', null=True, on_delete=models.DO_NOTHING)
+    agency = models.ForeignKey(to='structure.Agency', related_name='supervisor', null=True, on_delete=models.DO_NOTHING)
 
     class Meta:
         db_table = 'supervisor'
